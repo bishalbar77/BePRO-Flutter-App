@@ -18,7 +18,7 @@ class Body extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              "WELCOME TO BePRO",
+              "WELCOME TO YnotV",
               style: TextStyle(fontWeight: FontWeight.bold,fontSize: 19),
             ),
             SizedBox(height: size.height * 0.05),

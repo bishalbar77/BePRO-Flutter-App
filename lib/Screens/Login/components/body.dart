@@ -1,3 +1,5 @@
+import 'package:bepro/Profile/ProfileScreen.dart';
+import 'package:bepro/home.dart';
 import 'package:flutter/material.dart';
 import 'package:bepro/Screens/Login/components/background.dart';
 import 'package:bepro/Screens/Signup/signup_screen.dart';
@@ -39,7 +41,10 @@ class Body extends StatelessWidget {
             ),
             RoundedButton(
               text: "LOGIN",
-              press: () {},
+              press: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (__) => Home()));
+              },
             ),
             SizedBox(height: size.height * 0.03),
             AlreadyHaveAnAccountCheck(

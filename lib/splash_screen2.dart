@@ -1,17 +1,16 @@
 import 'package:bepro/Screens/Login/login_screen.dart';
 import 'package:bepro/Screens/Welcome/welcome_screen.dart';
-import 'package:bepro/splash_screen1.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:shimmer/shimmer.dart';
 
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen2 extends StatefulWidget {
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  _SplashScreen2State createState() => _SplashScreen2State();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreen2State extends State<SplashScreen2> {
 
   @override
   void initState(){
@@ -60,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen> {
           children: <Widget>[
             Opacity(
                 opacity: 1,
-                child: Image.asset('assets/img/bgg.png',
+                child: Image.asset('assets/img/bgggg.png',
                   fit: BoxFit.fill,),
             ),
 
