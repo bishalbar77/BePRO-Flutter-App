@@ -1,10 +1,48 @@
+import 'package:bepro/Controller/UserController.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bepro/Screens/Welcome/components/body.dart';
+import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Setting.dart';
+import '../../home.dart';
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends StatefulWidget {
+  @override
+  _WelcomeScreenState createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  var userData;
+  UserController get service => GetIt.I<UserController>();
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    _getUserInfo();
+    // TODO: implement initState
+    super.initState();
+  }
+  void _getUserInfo() async {
+    setState(() {
+      _isLoading = true;
+    });
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var email = localStorage.getString("email");
+    setState(() {
+      userData = email;
+    });
+    if (userData != null) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (__) => Home()));
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
