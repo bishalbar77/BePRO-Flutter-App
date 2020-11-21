@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:YnotV/Screens/Type/components/body.dart';
+import 'package:YnotV/Screens/SignupTutor/components/body.dart';
 
-class Type extends StatelessWidget {
+class SignUpScreenTutor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

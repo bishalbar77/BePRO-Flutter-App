@@ -1,7 +1,8 @@
 import 'dart:convert';
-import 'package:bepro/Model/Login.dart';
-import 'package:bepro/Model/User.dart';
-import 'package:bepro/Route/ApiResponse.dart';
+import 'package:YnotV/Model/Login.dart';
+import 'package:YnotV/Model/SignUp.dart';
+import 'package:YnotV/Model/User.dart';
+import 'package:YnotV/Route/ApiResponse.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,5 +35,18 @@ class UserController {
       return ApiResponse<User>(error: true, errorMessage: 'An error occurred. ' );
     })
         .catchError((_) => ApiResponse<User>(error: true, errorMessage: 'No internet connection found' ));
+  }
+
+  Future<ApiResponse<Sign>> signUp(Sign item) {
+    return http.post(API + '/signUp' , headers: headers, body: json.encode(item.toJson())).then((data) async {
+      if(data.statusCode==200)
+      {
+        print(data.statusCode);
+        final jsonData = json.decode(data.body);
+        return ApiResponse<Sign>( data: Sign.fromJson(jsonData) );
+      }
+      return ApiResponse<Sign>(error: true, errorMessage: 'Something went wrong.');
+    })
+        .catchError((_) => ApiResponse<Sign>(error: true, errorMessage: 'No internet connection found'));
   }
 }

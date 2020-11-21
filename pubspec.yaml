@@ -1,4 +1,4 @@
-name: bepro
+name: YnotV
 description: A new Flutter application.
 
 # The following line prevents the package from being accidentally published to
@@ -47,7 +47,7 @@ dev_dependencies:
   line_awesome_flutter: ^1.0.1
   flutter_screenutil: ^1.0.2
   animated_theme_switcher: ^1.0.5
-
+  share: ^0.6.5+4
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

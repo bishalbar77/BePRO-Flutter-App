@@ -1,7 +1,7 @@
-import 'package:bepro/Controller/UserController.dart';
+import 'package:YnotV/Controller/UserController.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:bepro/Screens/Welcome/components/body.dart';
+import 'package:YnotV/Screens/Welcome/components/body.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,7 +14,7 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-  var userData;
+  var email;
   UserController get service => GetIt.I<UserController>();
   bool _isLoading = false;
 
@@ -30,12 +30,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     });
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var email = localStorage.getString("email");
-    setState(() {
-      userData = email;
-    });
-    if (userData != null) {
+    if (email != null) {
+      print("Email: -"+email);
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (__) => Home()));
+          builder: (__) => Home(email: email,)));
     } else {
       setState(() {
         _isLoading = false;
@@ -45,30 +43,42 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar:true,
-      appBar: new AppBar(
-        iconTheme: IconThemeData(color: Colors.black, size: 10.0),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        actions: <Widget>[
-          PopupMenuButton<String>(
-            onSelected: choiceAction,
-            itemBuilder: (BuildContext context){
-              width: 300.0;
-              return Setting.choices.map((String choice){
-              width: 300.0;
-                return PopupMenuItem<String>(
-                  value: choice,
-                  child: Text(choice,
-                    textAlign: TextAlign.center,),
-                );
-              }).toList();
-            },
-          )
-        ],
+    return _isLoading
+        ? Container(
+      color: Colors.white70.withOpacity(0.3),
+      width: MediaQuery.of(context).size.width, //70.0,
+      height: MediaQuery.of(context).size.height, //70.0,
+      child: new Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: new Center(child: new CircularProgressIndicator())),
+    )
+        : WillPopScope(
+      onWillPop: () => Future.value(false),
+      child: Scaffold(
+        extendBodyBehindAppBar:true,
+        appBar: new AppBar(
+          iconTheme: IconThemeData(color: Colors.black, size: 10.0),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          actions: <Widget>[
+            PopupMenuButton<String>(
+              onSelected: choiceAction,
+              itemBuilder: (BuildContext context){
+                width: 300.0;
+                return Setting.choices.map((String choice){
+                width: 300.0;
+                  return PopupMenuItem<String>(
+                    value: choice,
+                    child: Text(choice,
+                      textAlign: TextAlign.center,),
+                  );
+                }).toList();
+              },
+            )
+          ],
+        ),
+        body: Body(),
       ),
-      body: Body(),
     );
   }
   void choiceAction(String choice){

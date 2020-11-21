@@ -3,9 +3,9 @@ import 'package:YnotV/Model/SignUp.dart';
 import 'package:YnotV/components/text_field_container.dart';
 import 'package:flutter/material.dart';
 import 'package:YnotV/Screens/Login/login_screen.dart';
-import 'package:YnotV/Screens/Signup/components/background.dart';
-import 'package:YnotV/Screens/Signup/components/or_divider.dart';
-import 'package:YnotV/Screens/Signup/components/social_icon.dart';
+import 'package:YnotV/Screens/SignupTutor/components/background.dart';
+import 'package:YnotV/Screens/SignupTutor/components/or_divider.dart';
+import 'package:YnotV/Screens/SignupTutor/components/social_icon.dart';
 import 'package:YnotV/components/already_have_an_account_acheck.dart';
 import 'package:YnotV/components/rounded_button.dart';
 import 'package:YnotV/components/rounded_input_field.dart';
@@ -128,7 +128,7 @@ class _BodyState extends State<Body> {
                       phone: _phoneController.text,
                       email: _emailController.text,
                       password: _passwordController.text,
-                      type: "Student",
+                      type: "Tutor",
                     );
                     final result =
                     await service.signUp(sign);

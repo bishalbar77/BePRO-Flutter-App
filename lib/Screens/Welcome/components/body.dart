@@ -1,10 +1,10 @@
-import 'package:bepro/Screens/Type/welcome_screen.dart';
+import 'package:YnotV/Screens/Type/welcome_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:bepro/Screens/Login/login_screen.dart';
-import 'package:bepro/Screens/Signup/signup_screen.dart';
-import 'package:bepro/Screens/Welcome/components/background.dart';
-import 'package:bepro/components/rounded_button.dart';
-import 'package:bepro/constants.dart';
+import 'package:YnotV/Screens/Login/login_screen.dart';
+import 'package:YnotV/Screens/Signup/signup_screen.dart';
+import 'package:YnotV/Screens/Welcome/components/background.dart';
+import 'package:YnotV/components/rounded_button.dart';
+import 'package:YnotV/constants.dart';
 import 'package:flutter_svg/svg.dart';
 
 class Body extends StatelessWidget {

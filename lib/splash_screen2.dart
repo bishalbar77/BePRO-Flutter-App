@@ -1,5 +1,5 @@
-import 'package:bepro/Screens/Login/login_screen.dart';
-import 'package:bepro/Screens/Welcome/welcome_screen.dart';
+import 'package:YnotV/Screens/Login/login_screen.dart';
+import 'package:YnotV/Screens/Welcome/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:shimmer/shimmer.dart';

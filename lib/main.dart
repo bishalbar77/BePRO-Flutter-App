@@ -1,8 +1,8 @@
-import 'package:bepro/Controller/UserController.dart';
-import 'package:bepro/splash_screen.dart';
+import 'package:YnotV/Controller/UserController.dart';
+import 'package:YnotV/splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:bepro/Screens/Welcome/welcome_screen.dart';
-import 'package:bepro/constants.dart';
+import 'package:YnotV/Screens/Welcome/welcome_screen.dart';
+import 'package:YnotV/constants.dart';
 import 'package:get_it/get_it.dart';
 
 void setupLocator() {
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'BePro',
+      title: 'Ynotv',
       theme: ThemeData(
         primaryColor: kPrimaryColor,
         scaffoldBackgroundColor: Colors.white,
