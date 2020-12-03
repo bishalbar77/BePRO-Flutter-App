@@ -21,6 +21,7 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  bool showPassword = true;
   UserController get service =>  GetIt.I<UserController>();
   TextEditingController _nameController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
@@ -89,7 +90,7 @@ class _BodyState extends State<Body> {
             ),
             TextFieldContainer(
               child: TextField(
-                obscureText: true,
+                obscureText: showPassword,
                 controller: _passwordController,
                 cursorColor: kPrimaryColor,
                 decoration: InputDecoration(
@@ -98,9 +99,28 @@ class _BodyState extends State<Body> {
                     Icons.lock,
                     color: kPrimaryColor,
                   ),
-                  suffixIcon: Icon(
-                    Icons.visibility,
-                    color: kPrimaryColor,
+                  suffixIcon: showPassword
+                      ? IconButton(
+                    onPressed: () {
+                      setState(() {
+                        showPassword = false;
+                      });
+                    },
+                    icon: Icon(
+                      Icons.visibility,
+                      color: Colors.red,
+                    ),
+                  )
+                      : IconButton(
+                    onPressed: () {
+                      setState(() {
+                        showPassword = true;
+                      });
+                    },
+                    icon: Icon(
+                      Icons.visibility_off,
+                      color: Colors.red,
+                    ),
                   ),
                   border: InputBorder.none,
                 ),
@@ -143,27 +163,9 @@ class _BodyState extends State<Body> {
                         "Something went wrong.")
                         : "Account created successfully";
                     if (text == "Account created successfully") {
-                      showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                            title: Text(title),
-                            content: Text(text),
-                            actions: <Widget>[
-                              FlatButton(
-                                child: Text('Ok'),
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                          builder: (__) =>
-                                              Home(email: _emailController.text,)));
-                                },
-                              )
-                            ],
-                          )).then((data) {
-                        if (!result.error) {
-                          Navigator.of(context).pop();
-                        }
-                      });
+                      Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (__) => Home(email: _emailController.text,)));
                     } //end if
                     else {
                       showDialog(
@@ -173,7 +175,7 @@ class _BodyState extends State<Body> {
                             content: Text(text),
                             actions: <Widget>[
                               FlatButton(
-                                child: Text('Ok'),
+                                child: Text('Retry'),
                                 onPressed: () {
                                   Navigator.of(context)
                                       .pop();

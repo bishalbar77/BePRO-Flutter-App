@@ -1,4 +1,4 @@
-import 'package:YnotV/Profile/ProfileScreen.dart';
+import 'package:YnotV/Screens/Profile/ProfileScreen.dart';
 import 'package:YnotV/Screens/Settings/Settings.dart';
 import 'package:flutter/material.dart';
 

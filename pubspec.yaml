@@ -39,6 +39,10 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   flutter_svg: ^0.19.0
+  cached_network_image: ^2.2.0+1
+  material_design_icons_flutter: ^4.0.5345
+  sliding_up_panel: ^1.0.0
+  url_launcher: ^5.4.2
 
 dev_dependencies:
   flutter_test:
@@ -48,6 +52,16 @@ dev_dependencies:
   flutter_screenutil: ^1.0.2
   animated_theme_switcher: ^1.0.5
   share: ^0.6.5+4
+  chewie: ^0.9.10
+  video_player: ^0.10.9
+  file_picker: ^1.8.0+1
+  photo_view: ^0.9.2
+  cached_network_image: ^2.0.0
+  carousel_slider: ^1.4.1
+  webview_flutter: ^0.3.18+1
+  progress_dialog: ^1.2.4
+  tuple: ^1.0.3
+  image_picker: ^0.5.3+1
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -71,6 +85,13 @@ flutter:
     - assets/img/bggg.png
     - assets/img/bgggg.png
     - assets/images/avatar.png
+    - assets/images/azamat-zhanisov.jpg
+    - assets/images/aiony-haust.jpg
+    - assets/images/scarlet-witch.jpg
+    - assets/images/captain-marvel.jpg
+    - assets/images/ironman.jpeg
+    - assets/images/averie-woodard.jpg
+    - assets/images/camera.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

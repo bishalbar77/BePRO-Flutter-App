@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:YnotV/Screens/Welcome/components/body.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../Setting.dart';
 import '../../home.dart';
@@ -53,7 +54,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           child: new Center(child: new CircularProgressIndicator())),
     )
         : WillPopScope(
-      onWillPop: () => Future.value(false),
+            onWillPop: () {
+              print('Backbutton pressed (device or appbar button), do whatever you want.');
+            Navigator.pop(context, false);
+            return Future.value(false);
+      },
       child: Scaffold(
         extendBodyBehindAppBar:true,
         appBar: new AppBar(
@@ -69,8 +74,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 width: 300.0;
                   return PopupMenuItem<String>(
                     value: choice,
-                    child: Text(choice,
-                      textAlign: TextAlign.center,),
+                    child: InkWell(
+                      child: Text(choice,
+                        textAlign: TextAlign.center,),
+                      onTap: () {
+                        _launchURL();
+                      },
+                    ),
                   );
                 }).toList();
               },
@@ -88,6 +98,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       print('Website');
     }else if(choice == Setting.Website){
       print('Contact us');
+    }
+  }
+  _launchURL() async {
+    const url = 'https://www.ynotv.com';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
     }
   }
 }

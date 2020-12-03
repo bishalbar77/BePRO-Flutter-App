@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:YnotV/Controller/UserController.dart';
 import 'package:YnotV/Model/Login.dart';
-import 'package:YnotV/Profile/ProfileScreen.dart';
+import 'file:///C:/Users/Bishal/AndroidStudioProjects/bepro/lib/Screens/Profile/ProfileScreen.dart';
 import 'package:YnotV/components/text_field_container.dart';
 import 'package:YnotV/home.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,7 @@ import 'package:YnotV/components/rounded_input_field.dart';
 import 'package:YnotV/components/rounded_password_field.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:YnotV/Screens/Type/welcome_screen.dart';
 
 import '../../../constants.dart';
 
@@ -24,6 +24,7 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  bool showPassword = true;
   UserController get service =>  GetIt.I<UserController>();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
@@ -106,7 +107,7 @@ class _BodyState extends State<Body> {
                 ),
                 TextFieldContainer(
                   child: TextField(
-                    obscureText: true,
+                    obscureText: showPassword,
                     controller: _passwordController,
                     cursorColor: kPrimaryColor,
                     decoration: InputDecoration(
@@ -115,9 +116,28 @@ class _BodyState extends State<Body> {
                         Icons.lock,
                         color: kPrimaryColor,
                       ),
-                      suffixIcon: Icon(
-                        Icons.visibility,
-                        color: kPrimaryColor,
+                      suffixIcon: showPassword
+                          ? IconButton(
+                        onPressed: () {
+                          setState(() {
+                            showPassword = false;
+                          });
+                        },
+                        icon: Icon(
+                          Icons.visibility,
+                          color: Colors.red,
+                        ),
+                      )
+                          : IconButton(
+                        onPressed: () {
+                          setState(() {
+                            showPassword = true;
+                          });
+                        },
+                        icon: Icon(
+                          Icons.visibility_off,
+                          color: Colors.red,
+                        ),
                       ),
                       border: InputBorder.none,
                     ),
@@ -157,27 +177,10 @@ class _BodyState extends State<Body> {
                             "Sorry! Credentials didn't match.")
                             : "Login successful";
                         if (text == 'Login successful') {
-                          showDialog(
-                              context: context,
-                              builder: (_) => AlertDialog(
-                                title: Text(title),
-                                content: Text(text),
-                                actions: <Widget>[
-                                  FlatButton(
-                                    child: Text('Ok'),
-                                    onPressed: () {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (__) =>
-                                                  Home(email: _emailController.text,)));
-                                    },
-                                  )
-                                ],
-                              )).then((data) {
-                            if (!result.error) {
-                              Navigator.of(context).pop();
-                            }
-                          });
+                          Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (__) =>
+                                      Home(email: _emailController.text,)));
                         } //end if
                         else {
                           showDialog(
@@ -187,10 +190,9 @@ class _BodyState extends State<Body> {
                                 content: Text(text),
                                 actions: <Widget>[
                                   FlatButton(
-                                    child: Text('Ok'),
+                                    child: Text('Retry'),
                                     onPressed: () {
-                                      Navigator.of(context)
-                                          .pop();
+                                        Navigator.of(context).pop(true);
                                     },
                                   )
                                 ],
@@ -211,7 +213,7 @@ class _BodyState extends State<Body> {
                       context,
                       MaterialPageRoute(
                         builder: (context) {
-                          return SignUpScreen();
+                          return Type();
                         },
                       ),
                     );

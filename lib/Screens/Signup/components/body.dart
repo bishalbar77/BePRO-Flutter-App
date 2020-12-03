@@ -21,6 +21,7 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  bool showPassword = true;
   UserController get service =>  GetIt.I<UserController>();
   TextEditingController _nameController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
@@ -39,191 +40,194 @@ class _BodyState extends State<Body> {
                     padding: const EdgeInsets.all(5.0),
                     child: new Center(child: new CircularProgressIndicator())),
               ) :
-    Background(
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(height: size.height * 0.15),
-            TextFieldContainer(
-              child: TextField(
-                controller: _nameController,
-                cursorColor: kPrimaryColor,
-                decoration: InputDecoration(
-                  icon: Icon(
-                    Icons.person,
-                    color: kPrimaryColor,
+    Scaffold(
+      body: Background(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(height: size.height * 0.15),
+              TextFieldContainer(
+                child: TextField(
+                  controller: _nameController,
+                  cursorColor: kPrimaryColor,
+                  decoration: InputDecoration(
+                    icon: Icon(
+                      Icons.person,
+                      color: kPrimaryColor,
+                    ),
+                    hintText: "Name",
+                    border: InputBorder.none,
                   ),
-                  hintText: "Name",
-                  border: InputBorder.none,
                 ),
               ),
-            ),
-            TextFieldContainer(
-              child: TextField(
-                controller: _phoneController,
-                cursorColor: kPrimaryColor,
-                decoration: InputDecoration(
-                  icon: Icon(
-                    Icons.call,
-                    color: kPrimaryColor,
+              TextFieldContainer(
+                child: TextField(
+                  controller: _phoneController,
+                  cursorColor: kPrimaryColor,
+                  decoration: InputDecoration(
+                    icon: Icon(
+                      Icons.call,
+                      color: kPrimaryColor,
+                    ),
+                    hintText: "Phone Number",
+                    border: InputBorder.none,
                   ),
-                  hintText: "Phone Number",
-                  border: InputBorder.none,
                 ),
               ),
-            ),
-            TextFieldContainer(
-              child: TextField(
-                controller: _emailController,
-                cursorColor: kPrimaryColor,
-                decoration: InputDecoration(
-                  icon: Icon(
-                    Icons.email,
-                    color: kPrimaryColor,
+              TextFieldContainer(
+                child: TextField(
+                  controller: _emailController,
+                  cursorColor: kPrimaryColor,
+                  decoration: InputDecoration(
+                    icon: Icon(
+                      Icons.email,
+                      color: kPrimaryColor,
+                    ),
+                    hintText: "Email",
+                    border: InputBorder.none,
                   ),
-                  hintText: "Email",
-                  border: InputBorder.none,
                 ),
               ),
-            ),
-            TextFieldContainer(
-              child: TextField(
-                obscureText: true,
-                controller: _passwordController,
-                cursorColor: kPrimaryColor,
-                decoration: InputDecoration(
-                  hintText: "Password",
-                  icon: Icon(
-                    Icons.lock,
-                    color: kPrimaryColor,
+              TextFieldContainer(
+                child: TextField(
+                  obscureText: showPassword,
+                  controller: _passwordController,
+                  cursorColor: kPrimaryColor,
+                  decoration: InputDecoration(
+                    hintText: "Password",
+                    icon: Icon(
+                      Icons.lock,
+                      color: kPrimaryColor,
+                    ),
+                    suffixIcon: showPassword
+                      ? IconButton(
+                        onPressed: () {
+                        setState(() {
+                        showPassword = false;
+                        });
+                        },
+                          icon: Icon(
+                            Icons.visibility,
+                            color: Colors.red,
+                          ),
+                        )
+                      : IconButton(
+                          onPressed: () {
+                            setState(() {
+                            showPassword = true;
+                            });
+                            },
+                              icon: Icon(
+                                Icons.visibility_off,
+                                color: Colors.red,
+                              ),
+                            ),
+                    border: InputBorder.none,
                   ),
-                  suffixIcon: Icon(
-                    Icons.visibility,
-                    color: kPrimaryColor,
-                  ),
-                  border: InputBorder.none,
                 ),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 10),
-              width: size.width * 0.8,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(29),
-                child: FlatButton(
-                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-                  color: kPrimaryColor,
-                  child: Text(
-                    "Create",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onPressed: () async {
-                    setState(() {
-                      _isLoading = true;
-                    });
-                    print(_phoneController.text);
-                    final sign = Sign(
-                      name: _nameController.text,
-                      phone: _phoneController.text,
-                      email: _emailController.text,
-                      password: _passwordController.text,
-                      type: "Student",
-                    );
-                    final result =
-                    await service.signUp(sign);
-                    setState(() {
-                      _isLoading = false;
-                    });
-                    final title = result.error
-                        ? 'Sorry'
-                        : 'Access Granted';
-                    final text = result.error
-                        ? (result.errorMessage ??
-                        "Something went wrong.")
-                        : "Account created successfully";
-                    if (text == "Account created successfully") {
-                      showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                            title: Text(title),
-                            content: Text(text),
-                            actions: <Widget>[
-                              FlatButton(
-                                child: Text('Ok'),
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                          builder: (__) =>
-                                              Home(email: _emailController.text,)));
-                                },
-                              )
-                            ],
-                          )).then((data) {
-                        if (!result.error) {
-                          Navigator.of(context).pop();
-                        }
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 10),
+                width: size.width * 0.8,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(29),
+                  child: FlatButton(
+                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                    color: kPrimaryColor,
+                    child: Text(
+                      "Create",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: () async {
+                      setState(() {
+                        _isLoading = true;
                       });
-                    } //end if
-                    else {
-                      showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                            title: Text(title),
-                            content: Text(text),
-                            actions: <Widget>[
-                              FlatButton(
-                                child: Text('Ok'),
-                                onPressed: () {
-                                  Navigator.of(context)
-                                      .pop();
-                                },
-                              )
-                            ],
-                          )).then((data) {
-                        if (!result.error) {
-                          Navigator.of(context).pop();
-                        }
+                      print(_phoneController.text);
+                      final sign = Sign(
+                        name: _nameController.text,
+                        phone: _phoneController.text,
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                        type: "Student",
+                      );
+                      final result =
+                      await service.signUp(sign);
+                      setState(() {
+                        _isLoading = false;
                       });
-                    }
-                  },
-                ),
-              ),
-            ),
-            SizedBox(height: size.height * 0.03),
-            AlreadyHaveAnAccountCheck(
-              login: false,
-              press: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return LoginScreen();
+                      final title = result.error
+                          ? 'Sorry'
+                          : 'Access Granted';
+                      final text = result.error
+                          ? (result.errorMessage ??
+                          "Something went wrong.")
+                          : "Account created successfully";
+                      if (text == "Account created successfully") {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (__) => Home(email: _emailController.text,)));
+                      } //end if
+                      else {
+                        showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              title: Text(title),
+                              content: Text(text),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text('Retry'),
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pop();
+                                  },
+                                )
+                              ],
+                            )).then((data) {
+                          if (!result.error) {
+                            Navigator.of(context).pop();
+                          }
+                        });
+                      }
                     },
                   ),
-                );
-              },
-            ),
-            OrDivider(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SocalIcon(
-                  iconSrc: "assets/icons/facebook.svg",
-                  press: () {},
                 ),
-                SocalIcon(
-                  iconSrc: "assets/icons/twitter.svg",
-                  press: () {},
-                ),
-                SocalIcon(
-                  iconSrc: "assets/icons/google-plus.svg",
-                  press: () {},
-                ),
-              ],
-            ),
-            SizedBox(height: size.height * 0.03),
-          ],
+              ),
+              SizedBox(height: size.height * 0.03),
+              AlreadyHaveAnAccountCheck(
+                login: false,
+                press: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return LoginScreen();
+                      },
+                    ),
+                  );
+                },
+              ),
+              OrDivider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SocalIcon(
+                    iconSrc: "assets/icons/facebook.svg",
+                    press: () {},
+                  ),
+                  SocalIcon(
+                    iconSrc: "assets/icons/twitter.svg",
+                    press: () {},
+                  ),
+                  SocalIcon(
+                    iconSrc: "assets/icons/google-plus.svg",
+                    press: () {},
+                  ),
+                ],
+              ),
+              SizedBox(height: size.height * 0.03),
+            ],
+          ),
         ),
       ),
     );

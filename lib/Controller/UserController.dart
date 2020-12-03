@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:YnotV/Model/Login.dart';
+import 'package:YnotV/Model/SearchUser.dart';
 import 'package:YnotV/Model/SignUp.dart';
 import 'package:YnotV/Model/User.dart';
 import 'package:YnotV/Route/ApiResponse.dart';
@@ -33,6 +34,23 @@ class UserController {
         return ApiResponse<User>( data: User.fromJson(jsonData) );
       }
       return ApiResponse<User>(error: true, errorMessage: 'An error occurred. ' );
+    })
+        .catchError((_) => ApiResponse<User>(error: true, errorMessage: 'No internet connection found' ));
+  }
+
+  Future<ApiResponse<List<SearchUser>>> search() {
+    return http.get(API + '/search', headers: headers).then((data){
+      if(data.statusCode==200) {
+        final jsonData = json.decode(data.body);
+        final jobs = <SearchUser>[];
+        for(var item in jsonData)
+        {
+          jobs.add(SearchUser.fromJson(item));
+        }
+        print(jobs);
+        return ApiResponse<List<SearchUser>>( data: jobs );
+      }
+      return ApiResponse<List<SearchUser>>(error: true, errorMessage: 'An error occurred. ' );
     })
         .catchError((_) => ApiResponse<User>(error: true, errorMessage: 'No internet connection found' ));
   }
