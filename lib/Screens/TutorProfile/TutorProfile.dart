@@ -249,7 +249,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        _infoCell(title: 'Projects', value: '1135'),
+        _infoCell(title: 'Courses', value: '5'),
         Container(
           width: 1,
           height: 40,
@@ -261,7 +261,7 @@ class _ProfilePageState extends State<ProfilePage> {
           height: 40,
           color: Colors.grey,
         ),
-        _infoCell(title: 'Location', value: 'Dusseldorf'),
+        _infoCell(title: 'Course type', value: 'Online'),
       ],
     );
   }
@@ -309,7 +309,7 @@ class _ProfilePageState extends State<ProfilePage> {
           height: 8,
         ),
         Text(
-          'Freelancer',
+          'Tutor',
           style: TextStyle(
             fontFamily: 'NimbusSanL',
             fontStyle: FontStyle.italic,

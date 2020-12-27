@@ -54,7 +54,7 @@ class _BodyState extends State<Body> {
                   decoration: InputDecoration(
                     icon: Icon(
                       Icons.person,
-                      color: kPrimaryColor,
+                      color: Colors.purple,
                     ),
                     hintText: "Name",
                     border: InputBorder.none,
@@ -68,7 +68,7 @@ class _BodyState extends State<Body> {
                   decoration: InputDecoration(
                     icon: Icon(
                       Icons.call,
-                      color: kPrimaryColor,
+                      color: Colors.purple,
                     ),
                     hintText: "Phone Number",
                     border: InputBorder.none,
@@ -82,7 +82,7 @@ class _BodyState extends State<Body> {
                   decoration: InputDecoration(
                     icon: Icon(
                       Icons.email,
-                      color: kPrimaryColor,
+                      color: Colors.purple,
                     ),
                     hintText: "Email",
                     border: InputBorder.none,
@@ -98,7 +98,7 @@ class _BodyState extends State<Body> {
                     hintText: "Password",
                     icon: Icon(
                       Icons.lock,
-                      color: kPrimaryColor,
+                      color: Colors.purple,
                     ),
                     suffixIcon: showPassword
                       ? IconButton(
@@ -109,7 +109,7 @@ class _BodyState extends State<Body> {
                         },
                           icon: Icon(
                             Icons.visibility,
-                            color: Colors.red,
+                            color: Colors.purple,
                           ),
                         )
                       : IconButton(
@@ -120,7 +120,7 @@ class _BodyState extends State<Body> {
                             },
                               icon: Icon(
                                 Icons.visibility_off,
-                                color: Colors.red,
+                                color: Colors.purple,
                               ),
                             ),
                     border: InputBorder.none,
@@ -134,7 +134,7 @@ class _BodyState extends State<Body> {
                   borderRadius: BorderRadius.circular(29),
                   child: FlatButton(
                     padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-                    color: kPrimaryColor,
+                    color: Colors.purple,
                     child: Text(
                       "Create",
                       style: TextStyle(color: Colors.white),

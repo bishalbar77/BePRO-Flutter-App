@@ -1,10 +1,8 @@
 import 'dart:convert';
 
 import 'package:YnotV/Model/SearchUser.dart';
-import 'package:YnotV/Screens/Chat/ChatHomepage.dart';
-import 'package:YnotV/Screens/Profile/ProfileScreen.dart';
 import 'package:YnotV/Screens/TutorProfile/TutorProfile.dart';
-import 'package:YnotV/home.dart';
+import 'package:YnotV/widgets/BottomNavigation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,7 +19,7 @@ class _SearchListState extends State<SearchListPage> {
   List<SearchUser> _notesForDisplay = List<SearchUser>();
   static var email;
   Future<List<SearchUser>> fetchNotes() async {
-    var url = 'http://ynotv.herokuapp.com/api/search';
+    var url = 'http://ynotv2-env.eba-exq3jn5q.ap-south-1.elasticbeanstalk.com/api/search';
     var response = await http.get(url);
 
     var notes = List<SearchUser>();
@@ -60,68 +58,7 @@ class _SearchListState extends State<SearchListPage> {
           },
           itemCount: _notesForDisplay.length+1,
         ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 1,
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home,
-              ),
-              title: Text('Home',
-                  style: TextStyle(
-                  )),
-              backgroundColor: Colors.red
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.search,
-                color: Colors.red,),
-              title: Text('Search',
-                  style: TextStyle(
-                      color: Colors.red
-                  )
-              ),
-              backgroundColor: Colors.red
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.camera),
-              title: Text('Post'),
-              backgroundColor: Colors.red
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.inbox),
-              title: Text('Inbox'),
-              backgroundColor: Colors.red
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              title: Text('Profile',
-              ),
-              backgroundColor: Colors.red
-          ),
-        ],
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.of(context)
-                .push(MaterialPageRoute(
-                builder: (__) => Home(email: email,)));
-          }
-          else if (index == 1) {}
-          else if (index == 2) {}
-          else if (index == 3) {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (__) => ChatHomeScreen()));
-          }
-          else if (index == 4) {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (__) => Profile()));
-          }
-          else {
-            Navigator.of(context)
-                .push(MaterialPageRoute(
-                builder: (__) => Home(email: email,)));
-          }
-        },
-      ),
+      bottomNavigationBar: BottomNavigation(email: email,),
     );
   }
 

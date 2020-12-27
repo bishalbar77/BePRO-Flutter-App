@@ -1,5 +1,6 @@
 import 'package:YnotV/Screens/Chat/ChatHomepage.dart';
 import 'package:YnotV/Screens/Search/SearchList.dart';
+import 'package:YnotV/widgets/BottomNavigation.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:YnotV/Screens/EditProfile/EditProfile.dart';
 import 'package:YnotV/Screens/Settings/Settings.dart';
@@ -13,8 +14,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:share/share.dart';
 import 'package:YnotV/home.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   // This widget is the root of your application.
+
+  @override
+  _ProfileState createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return ThemeProvider(
@@ -36,13 +43,15 @@ class ProfileScreen extends StatefulWidget {
   @override
 _ProfileScreenState createState() => _ProfileScreenState();
 }
+bool _isLoading = false;
 class _ProfileScreenState extends State<ProfileScreen> {
 
 
   TextEditingController _emailController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
   TextEditingController _idController = TextEditingController();
-  bool _isLoading = false;
+  TextEditingController _urlController = TextEditingController();
+  TextEditingController _typeController = TextEditingController();
   @override
   void initState() {
     _getUserInfo();
@@ -56,8 +65,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var email = localStorage.getString("email");
     var name = localStorage.getString("name");
+    var id = localStorage.getString("id");
+    var url = localStorage.getString("url");
+    var type = localStorage.getString("type");
     _emailController.text = email;
     _nameController.text = name;
+    _idController.text = id;
+    _urlController.text = url ?? 'https://www.pngitem.com/pimgs/m/150-1503945_transparent-user-png-default-user-image-png-png.png';
+    _typeController.text = type;
     setState(() {
       _isLoading = false;
     });
@@ -78,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 CircleAvatar(
                   radius: kSpacingUnit.w * 5,
                   backgroundImage: NetworkImage(
-                    "https://images.pexels.com/photos/3307758/pexels-photo-3307758.jpeg",
+                    _urlController.text,
                   ),
                 ),
                 Align(
@@ -340,6 +355,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           ),
                             onTap: () async {
+                              super.dispose();
                               SharedPreferences preferences = await SharedPreferences.getInstance();
                               await preferences.clear();
                               Navigator.of(context)
@@ -352,66 +368,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 )
               ],
             ),
-            bottomNavigationBar: BottomNavigationBar(
-              currentIndex: 4,
-              type: BottomNavigationBarType.fixed,
-              items: [
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.home,
-                    ),
-                    title: Text('Home',
-                        style: TextStyle(
-                        )),
-                    backgroundColor: Colors.red
-                ),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.search),
-                    title: Text('Search'),
-                    backgroundColor: Colors.red
-                ),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.camera),
-                    title: Text('Post'),
-                    backgroundColor: Colors.red
-                ),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.inbox),
-                    title: Text('Inbox'),
-                    backgroundColor: Colors.red
-                ),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.person,
-                      color: Colors.red,),
-                    title: Text('Profile',style: TextStyle(
-                        color: Colors.red)
-                      ),
-                    backgroundColor: Colors.red
-                ),
-              ],
-              onTap: (index) {
-                if (index == 0) {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (__) => Home(email: _emailController.text,)));
-                }
-                else if (index == 1) {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (__) => SearchListPage()));
-                }
-                else if (index == 2) {}
-                else if (index == 3) {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (__) => ChatHomeScreen()));
-                }
-                else if (index == 4) {}
-                else {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (__) => Home(email: _emailController.text,)));
-                }
-              },
-            ),
+            bottomNavigationBar: BottomNavigation(email: _emailController.text,),
           );
         },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    print("Disposing second route");
+    super.deactivate();
   }
 }

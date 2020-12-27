@@ -1,16 +1,15 @@
 import 'dart:convert';
 import 'package:YnotV/Controller/UserController.dart';
+import 'package:YnotV/Model/NewsFeed.dart';
 import 'package:YnotV/Screens/Search/SearchList.dart';
+import 'package:YnotV/widgets/BottomNavigation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:YnotV/Model/User.dart';
-import 'Screens/Chat/ChatHomepage.dart';
+import 'Route/ApiResponse.dart';
 import 'Screens/Login/login_screen.dart';
-import 'Screens/PostFeed/PostFeed.dart';
-import 'Screens/Profile/ProfileScreen.dart';
-import 'package:video_player/video_player.dart';
 
 
 class Home extends StatefulWidget {
@@ -25,21 +24,15 @@ class Home extends StatefulWidget {
 }
 class _HomeState extends State<Home> {
   UserController get service => GetIt.I<UserController>();
+  UserController get service2 => GetIt.I<UserController>();
   String errorMesaage;
+  String loader = null;
   User user = new User();
-  bool _isLoading = false;
+  bool _isLoading = true;
+  ApiResponse<List<NewsFeed>> _apiResponse ;
 
-  @override
   void initState() {
-    _controller = VideoPlayerController.network(
-      'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
-    );
-
-    // Initialize the controller and store the Future for later use.
-    _initializeVideoPlayerFuture = _controller.initialize();
-
-    // Use the controller to loop the video.
-    _controller.setLooping(true);
+    loader==null;
     super.initState();
     setState(() {
       _isLoading = true;
@@ -58,13 +51,24 @@ class _HomeState extends State<Home> {
         localStorage.setString("name", user.name);
         localStorage.setString("id", user.ID.toString());
         localStorage.setString("email", user.email);
+        localStorage.setString("type", user.type);
+        localStorage.setString("url", user.url);
       });
     }
     else {
       _getUserInfo();
     }
+    _newsFeedsDate();
   }
 
+  void _newsFeedsDate() async {
+    // ignore: missing_return
+    _apiResponse = await service2.newsFeed();
+    setState(() {
+      _isLoading =false;
+    });
+    loader = "done";
+  }
   void _getUserInfo() async {
     setState(() {
       _isLoading = true;
@@ -76,7 +80,7 @@ class _HomeState extends State<Home> {
           .push(MaterialPageRoute(builder: (__) => LoginScreen()));
     }
     else {
-      setState(() {
+      setState(() async {
         _isLoading = false;
       });
     }
@@ -102,7 +106,15 @@ class _HomeState extends State<Home> {
                 }),
           ],
         ),
-        body: Column(
+        body: loader==null ? Container(
+          color: Colors.white70.withOpacity(0.3),
+          width: MediaQuery.of(context).size.width, //70.0,
+          height: MediaQuery.of(context).size.height, //70.0,
+          child: new Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: new Center(child: new CircularProgressIndicator())),
+        )
+            : Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Expanded(
@@ -113,21 +125,14 @@ class _HomeState extends State<Home> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      SizedBox(height: 20,),
-                      makeFeed(
-                          userName: 'Aiony Haust',
-                          userImage: 'assets/images/aiony-haust.jpg',
-                          feedTime: '1 hr ago',
-                          feedText: 'All the Lorem Ipsum generators on the Internet tend to repeat predefined.',
-                          feedImage: 'assets/images/azamat-zhanisov.jpg'
-                      ),
-                      makeFeed(
-                          userName: 'Azamat Zhanisov',
-                          userImage: 'assets/images/azamat-zhanisov.jpg',
-                          feedTime: '3 mins ago',
-                          feedText: "All the Lorem Ipsum generators on the Internet tend to repeat predefined.",
-                          feedImage: 'assets/images/averie-woodard.jpg'
-                      ),
+                      for (int i = 0; i < (_apiResponse.data!=null?_apiResponse.data.length:0); i++)
+                        makeFeed(
+                            userName: 'Aiony Haust',
+                            userImage: 'assets/images/azamat-zhanisov.jpg',
+                            feedTime: '1 hr ago',
+                            feedText: _apiResponse.data[i].caption,
+                            feedImage: _apiResponse.data[i].url
+                        ),
                     ],
                   ),
                 ),
@@ -135,64 +140,7 @@ class _HomeState extends State<Home> {
             )
           ],
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: 0,
-          type: BottomNavigationBarType.fixed,
-          items: [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.home,
-                  color: Colors.red,
-                ),
-                title: Text('Home',
-                    style: TextStyle(
-                      color: Colors.red,
-                    )),
-                backgroundColor: Colors.red
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.search),
-                title: Text('Search'
-                ),
-                backgroundColor: Colors.red
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.camera),
-                title: Text('Post'),
-                backgroundColor: Colors.red
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.inbox),
-                title: Text('Inbox'),
-                backgroundColor: Colors.red
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                title: Text('Profile',
-                ),
-                backgroundColor: Colors.red
-            ),
-          ],
-          onTap: (index) {
-            if (index == 0) {}
-            else if (index == 1) {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (__) => SearchListPage()));
-            }
-            else if (index == 2) {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (__) => PostFeed()));
-            }
-            else if (index == 3) {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (__) => ChatHomeScreen()));
-            }
-            else if (index == 4) {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (__) => Profile()));
-            }
-            else {}
-          },
-        ),
+        bottomNavigationBar: BottomNavigation(email: widget.email,),
       ),
     );
   }
@@ -253,7 +201,7 @@ class _HomeState extends State<Home> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 image: DecorationImage(
-                    image: AssetImage(feedImage),
+                    image: NetworkImage(feedImage),
                     fit: BoxFit.cover
                 )
             ),
@@ -340,15 +288,9 @@ class _HomeState extends State<Home> {
     );
   }
 
-  VideoPlayerController _controller;
-  Future<void> _initializeVideoPlayerFuture;
-
 
   @override
   void dispose() {
-    // Ensure disposing of the VideoPlayerController to free up resources.
-    _controller.dispose();
-
     super.dispose();
   }
 

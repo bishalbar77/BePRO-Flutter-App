@@ -62,7 +62,7 @@ class _BodyState extends State<Body> {
   @override
     Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: _onWillPop,
+      onWillPop: () => Future.value(false),
       child: _isLoading
           ? Container(
         color: Colors.white70.withOpacity(0.3),

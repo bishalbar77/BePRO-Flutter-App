@@ -32,7 +32,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var email = localStorage.getString("email");
     if (email != null) {
-      print("Email: -"+email);
+      print("Email: "+email);
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (__) => Home(email: email,)));
     } else {

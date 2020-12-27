@@ -11,24 +11,25 @@ const kDarkSecondaryColor = Color(0xFF373737);
 const kLightPrimaryColor = Color(0xFFFFFFFF);
 const kLightSecondaryColor = Color(0xFFF3F7FB);
 const kAccentColor = Color(0xFFF00000);
-
-final kTitleTextStyle = TextStyle(
+const primary = Color(0xff4f359b);
+const white = Color(0xffffffff);
+var kTitleTextStyle = TextStyle(
   fontSize: ScreenUtil().setSp(kSpacingUnit.w * 1.7),
   fontWeight: FontWeight.w600,
 );
 
-final kCaptionTextStyle = TextStyle(
+var kCaptionTextStyle = TextStyle(
   fontSize: ScreenUtil().setSp(kSpacingUnit.w * 1.3),
   fontWeight: FontWeight.w100,
 );
 
-final kButtonTextStyle = TextStyle(
+var kButtonTextStyle = TextStyle(
   fontSize: ScreenUtil().setSp(kSpacingUnit.w * 1.5),
   fontWeight: FontWeight.bold,
   color: kDarkPrimaryColor,
 );
 
-final kDarkTheme = ThemeData(
+var kDarkTheme = ThemeData(
   brightness: Brightness.dark,
   fontFamily: 'SFProText',
   primaryColor: kDarkPrimaryColor,
@@ -45,7 +46,7 @@ final kDarkTheme = ThemeData(
   ),
 );
 
-final kLightTheme = ThemeData(
+var kLightTheme = ThemeData(
   brightness: Brightness.light,
   fontFamily: 'SFProText',
   primaryColor: kLightPrimaryColor,

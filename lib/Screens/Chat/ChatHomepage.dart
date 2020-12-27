@@ -2,6 +2,7 @@ import 'package:YnotV/Model/message_model.dart';
 import 'package:YnotV/Screens/Profile/ProfileScreen.dart';
 import 'package:YnotV/Screens/Search/SearchList.dart';
 import 'package:YnotV/home.dart';
+import 'package:YnotV/widgets/BottomNavigation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -164,60 +165,7 @@ static var email;
           );
         },
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 3,
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home,
-              ),
-              title: Text('Home'),
-              backgroundColor: Colors.red
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.search),
-              title: Text('Search'),
-              backgroundColor: Colors.red
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.camera),
-              title: Text('Post'),
-              backgroundColor: Colors.red
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.inbox,
-                color: Colors.red,),
-              title: Text('Inbox',style: TextStyle(
-                  color: Colors.red)),
-              backgroundColor: Colors.red
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              title: Text('Profile'),
-              backgroundColor: Colors.red
-          ),
-        ],
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (__) => Home(email: email,)));
-          }
-          else if (index == 1) {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (__) => SearchListPage()));
-          }
-          else if (index == 2) {}
-          else if (index == 3) {}
-          else if (index == 4) {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (__) => Profile()));
-          }
-          else {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (__) => Home(email: email,)));
-          }
-        },
-      ),
+      bottomNavigationBar: BottomNavigation(email: email,),
     );
   }
 }
