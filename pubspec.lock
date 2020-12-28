@@ -736,7 +736,7 @@ packages:
     source: hosted
     version: "0.2.19-nullsafety.2"
   timeago:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: timeago
       url: "https://pub.dartlang.org"

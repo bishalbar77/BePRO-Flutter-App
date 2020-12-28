@@ -8,24 +8,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 
 import '../../constants.dart';
-
-class SettingsUI extends StatelessWidget {
+class EditGuidesProfilePage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "Setting UI",
-      home: EditProfilePage(),
-    );
-  }
+  _GuidesProfilePageState createState() => _GuidesProfilePageState();
 }
 
-class EditProfilePage extends StatefulWidget {
-  @override
-  _EditProfilePageState createState() => _EditProfilePageState();
-}
-
-class _EditProfilePageState extends State<EditProfilePage> {
+class _GuidesProfilePageState extends State<EditGuidesProfilePage> {
   bool showPassword = false;
   TextEditingController _emailController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
@@ -34,6 +22,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
   TextEditingController _typeController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  TextEditingController job = TextEditingController();
+  TextEditingController company = TextEditingController();
+  TextEditingController qualification = TextEditingController();
+  TextEditingController about = TextEditingController();
+  TextEditingController experience = TextEditingController();
   bool _isLoading = false;
   File _image;
   final picker = ImagePicker();
@@ -75,13 +68,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
     });
   }
   Future upload(File imageFile) async {
-    var uri = Uri.parse("http://ynotv2-env.eba-exq3jn5q.ap-south-1.elasticbeanstalk.com/api/postStudentUserEdit");
+    var uri = Uri.parse("http://ynotv2-env.eba-exq3jn5q.ap-south-1.elasticbeanstalk.com/api/postGuideUserEdit");
     var request = http.MultipartRequest("POST",uri);
     request.fields['id'] = _idController.text;
     request.fields['name'] = _nameController.text;
     request.fields['phone'] = _phoneController.text;
     request.fields['email'] = _emailController.text;
     request.fields['password'] = _passwordController.text;
+    request.fields['job'] = job.text;
+    request.fields['company'] = company.text;
+    request.fields['experience'] = experience.text;
+    request.fields['qualification'] = qualification.text;
+    request.fields['about'] = about.text;
     var pic = await http.MultipartFile.fromPath("image", imageFile.path);
     request.files.add(pic);
     var response = await request.send();
@@ -195,6 +193,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
               SizedBox(
                 height: 35,
               ),
+              Text(
+                'Personal Information',
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.redAccent,
+                ),
+                textAlign: TextAlign.left,
+              ),
+              Container(height: 8),
               TextField(
                 controller: _nameController,
                 decoration: InputDecoration(border: OutlineInputBorder(),
@@ -217,6 +224,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     border: OutlineInputBorder(),
                     hintText: 'Phone number',
                     labelText: 'Phone number',
+                ),
+              ),
+              Container(height: 8),
+              TextField(
+                controller: about,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'About',
+                  labelText: 'Bio',
                 ),
               ),
               Container(height: 8),
@@ -252,7 +268,48 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ),
                   ),
                 ),
+              Container(height: 18),
+              Text(
+                'Professional Information',
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.redAccent,
+                ),
+                textAlign: TextAlign.left,
+              ),
               Container(height: 8),
+              TextField(
+                controller: job,
+                decoration: InputDecoration(border: OutlineInputBorder(),
+                    hintText: 'Job description',
+                    labelText: 'Job description'
+                ),
+              ),
+              Container(height: 8),
+              TextField(
+                controller: company,
+                decoration: InputDecoration(border: OutlineInputBorder(),
+                    hintText: 'Company',
+                    labelText: 'Company'
+                ),
+              ),
+              Container(height: 8),
+              TextField(
+                controller: qualification,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Highest Qualification',
+                  labelText: 'Highest Qualification',
+                ),
+              ),
+              Container(height: 8),
+              TextField(
+                controller: experience,
+                decoration: InputDecoration(border: OutlineInputBorder(),
+                    hintText: 'Experience (in years)',
+                    labelText: 'Experience'
+                ),
+              ),
               SizedBox(
                 height: 35,
               ),

@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:YnotV/Controller/UserController.dart';
-import 'package:YnotV/Model/User.dart';
+import 'package:YnotV/Model/TutorDetails.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+// ignore: must_be_immutable
 class ProfilePage extends StatefulWidget {
   String email;
   ProfilePage({
@@ -16,59 +20,80 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   bool _isOpen = false;
   UserController get service =>  GetIt.I<UserController>();
-  TextEditingController _idController = new TextEditingController();
-  TextEditingController _nameController = new TextEditingController();
-  TextEditingController _emailController = new TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _idController = TextEditingController();
+  TextEditingController _urlController = TextEditingController();
+  TextEditingController _typeController = TextEditingController();
+  TextEditingController _phoneController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  TextEditingController title = TextEditingController();
+  TextEditingController address = TextEditingController();
+  TextEditingController qualification = TextEditingController();
+  TextEditingController company = TextEditingController();
+  TextEditingController job = TextEditingController();
+  TextEditingController skills = TextEditingController();
+  TextEditingController fees = TextEditingController();
+  TextEditingController upi = TextEditingController();
   String errorMesaage;
-  User user = new User();
+  TutorDetails user = new TutorDetails();
   bool _isLoading = false;
+  var _imageList = [];
 
   @override
   void initState() {
     super.initState();
+    this.fetchUser();
     setState(() {
       _isLoading = true;
     });
     if(widget.email!=null)
     {
-      service.userData(widget.email)
-          .then((response) async {
-        setState(() {
-          _isLoading = false;
+        service.tutorData(widget.email)
+            .then((response) {
+          if (response.error) {
+            errorMesaage = response.errorMessage ?? 'Something went wrong';
+          }
+          user = response.data;
+          _idController.text = user.ID.toString();
+          _nameController.text = user.name;
+          _phoneController.text = user.phone;
+          _urlController.text = user.url;
+          qualification.text = user.qualification;
+          title.text = user.title;
+          address.text = user.address;
+          job.text = user.job;
+          company.text = user.company;
+          skills.text = user.skills;
+          fees.text = user.fees;
+          upi.text = user.upi;
         });
-        if(response.error) {
-          errorMesaage = response.errorMessage ?? 'Something went wrong';
-        }
-        user = response.data;
-        _idController.text = user.ID.toString();
-        _nameController.text = user.name;
-        print(_nameController.text);
-        _emailController.text = user.email;
-      });
     }
   }
 
   PanelController _panelController = PanelController();
-  var _imageList = [
-    'images/1.jpg',
-    'images/2.jpeg',
-    'images/3.jpg',
-    'images/4.jpeg',
-    'images/5.jpg',
-    'images/6.jpg',
-    'images/7.jpeg',
-    'images/8.jpg',
-    'images/9.jpg',
-    'images/10.jpeg',
-    'images/11.png',
-    'images/12.jpeg',
-    'images/13.jpg',
-    'images/14.jpg',
-    'images/15.jpg',
-    'images/16.jpeg',
-    'images/17.jpg',
-    'images/18.jpeg',
-  ];
+  fetchUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    var url = "http://ynotv2-env.eba-exq3jn5q.ap-south-1.elasticbeanstalk.com/api/getTutorNewsFeed/2";
+    var response = await http.get(url);
+    print(response.body);
+    if(response.statusCode == 200){
+      var items = json.decode(response.body);
+      for(int index=0;items[index].url!=null;index++)
+      {
+        _imageList.add(items[index].url);
+        print(items[index].url);
+      }
+      setState(() {
+        _isLoading = false;
+      });
+    }else{
+      _imageList = [];
+      _isLoading = false;
+    }
+  }
 
   /// **********************************************
   /// LIFE CYCLE METHODS
@@ -85,7 +110,7 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('images/profile.jpg'),
+                  image: NetworkImage(_urlController.text),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -174,7 +199,7 @@ class _ProfilePageState extends State<ProfilePage> {
             itemBuilder: (BuildContext context, int index) => Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(_imageList[index]),
+                  image: NetworkImage(_imageList[index].url),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -255,7 +280,7 @@ class _ProfilePageState extends State<ProfilePage> {
           height: 40,
           color: Colors.grey,
         ),
-        _infoCell(title: 'Hourly Rate', value: "\$65"),
+        _infoCell(title: 'Monthly Rate', value: "Rs. "+fees.text),
         Container(
           width: 1,
           height: 40,
@@ -309,7 +334,7 @@ class _ProfilePageState extends State<ProfilePage> {
           height: 8,
         ),
         Text(
-          'Tutor',
+          title.text,
           style: TextStyle(
             fontFamily: 'NimbusSanL',
             fontStyle: FontStyle.italic,

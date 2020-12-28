@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:YnotV/Model/User.dart';
 import 'Route/ApiResponse.dart';
 import 'Screens/Login/login_screen.dart';
-
+import 'package:timeago/timeago.dart' as timeago;
 
 class Home extends StatefulWidget {
   String email;
@@ -52,6 +52,7 @@ class _HomeState extends State<Home> {
         localStorage.setString("id", user.ID.toString());
         localStorage.setString("email", user.email);
         localStorage.setString("type", user.type);
+        localStorage.setString("phone", user.phone);
         localStorage.setString("url", user.url);
       });
     }
@@ -127,9 +128,9 @@ class _HomeState extends State<Home> {
                     children: <Widget>[
                       for (int i = 0; i < (_apiResponse.data!=null?_apiResponse.data.length:0); i++)
                         makeFeed(
-                            userName: 'Aiony Haust',
-                            userImage: 'assets/images/azamat-zhanisov.jpg',
-                            feedTime: '1 hr ago',
+                            userName: _apiResponse.data[i].name,
+                            userImage: _apiResponse.data[i].image,
+                            feedTime: "5 secs",
                             feedText: _apiResponse.data[i].caption,
                             feedImage: _apiResponse.data[i].url
                         ),
@@ -162,7 +163,7 @@ class _HomeState extends State<Home> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                            image: AssetImage(userImage),
+                            image: NetworkImage(userImage),
                             fit: BoxFit.cover
                         )
                     ),

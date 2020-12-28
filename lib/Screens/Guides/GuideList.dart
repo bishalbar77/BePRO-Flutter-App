@@ -75,7 +75,7 @@ class _IndexPageState extends State<GuideList> {
   Widget getCard(item){
     var fullName = item['name'];
     var email = item['email'];
-    var profileUrl = "http://ynotv2-env.eba-exq3jn5q.ap-south-1.elasticbeanstalk.com/images/done.png";
+    var profileUrl = item['url'] ?? "http://ynotv2-env.eba-exq3jn5q.ap-south-1.elasticbeanstalk.com/images/user.png";
     return Card(
       elevation: 1.5,
       child: InkWell(
@@ -88,7 +88,7 @@ class _IndexPageState extends State<GuideList> {
                   width: 60,
                   height: 60,
                   decoration: BoxDecoration(
-                      color: primary,
+                      color: Colors.redAccent,
                       borderRadius: BorderRadius.circular(60/2),
                       image: DecorationImage(
                           fit: BoxFit.cover,
@@ -114,7 +114,7 @@ class _IndexPageState extends State<GuideList> {
         onTap: () {
           Navigator.of(context)
               .push(MaterialPageRoute(
-              builder: (__) => GuideProfile()));
+              builder: (__) => GuideProfile(email: email.toString(),)));
         },
       ),
     );

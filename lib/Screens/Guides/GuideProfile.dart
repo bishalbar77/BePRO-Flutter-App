@@ -1,15 +1,79 @@
+import 'package:YnotV/Model/GuideDetails.dart';
 import 'package:flutter/material.dart';
+import 'package:YnotV/Controller/UserController.dart';
+import 'package:get_it/get_it.dart';
 
 class GuideProfile extends StatefulWidget {
+  String email;
+  GuideProfile({
+    this.email
+  });
   @override
   _GuideProfileState createState() => _GuideProfileState();
 }
 
 class _GuideProfileState extends State<GuideProfile> {
+  UserController get service =>  GetIt.I<UserController>();
+  TextEditingController _idController = new TextEditingController();
+  TextEditingController _nameController = new TextEditingController();
+  TextEditingController _emailController = new TextEditingController();
+  TextEditingController phone = new TextEditingController();
+  TextEditingController type = new TextEditingController();
+  TextEditingController qualification = new TextEditingController();
+  TextEditingController url = new TextEditingController();
+  TextEditingController job = new TextEditingController();
+  TextEditingController about = new TextEditingController();
+  TextEditingController experience = new TextEditingController();
+  TextEditingController company = new TextEditingController();
+  String errorMesaage;
+  GuideDetails user = new GuideDetails();
+  bool _isLoading;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _isLoading = true;
+    });
+    if(widget.email!=null)
+    {
+      print(widget.email);
+      service.guideData(widget.email)
+          .then((response) async {
+        if(response.error) {
+          errorMesaage = response.errorMessage ?? 'Something went wrong';
+        }
+        user = response.data;
+        _nameController.text = user.name;
+        _emailController.text = user.email;
+        phone.text = user.phone;
+        url.text = user.url ?? "http://ynotv2-env.eba-exq3jn5q.ap-south-1.elasticbeanstalk.com/images/user.png";
+        type.text = user.type;
+        qualification.text = user.qualification;
+        job.text = user.job;
+        about.text = user.about;
+        experience.text = user.experience;
+        company.text = user.company;
+        _idController.text = user.ID.toString();
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body:  _isLoading
+          ? Container(
+        color: Colors.white70.withOpacity(0.3),
+        width: MediaQuery.of(context).size.width, //70.0,
+        height: MediaQuery.of(context).size.height, //70.0,
+        child: new Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: new Center(child: new CircularProgressIndicator())),
+      )
+          : ListView(
         children: <Widget>[
           Container(
               decoration: BoxDecoration(
@@ -29,34 +93,32 @@ class _GuideProfileState extends State<GuideProfile> {
                     children: <Widget>[
                       CircleAvatar(
                         backgroundImage: NetworkImage(
-                          "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg",
+                          url.text,
                         ),
                         radius: 50.0,
+                        backgroundColor: Colors.redAccent,
                       ),
                       SizedBox(
                         height: 10.0,
                       ),
                       Text(
-                        "Alice James",
+                        _nameController.text,
                         style: TextStyle(
                           fontSize: 22.0,
                           color: Colors.white,
                         ),
                       ),
-                      SizedBox(
-                        height: 5.0,
-                      ),
-                      Text(
-                        "I am a freelance mobile app developer conatct me to know amore",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontStyle: FontStyle.italic,
-                          fontSize: 22.0,
-                          color: Colors.white70,
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          about.text,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontStyle: FontStyle.italic,
+                            fontSize: 20.0,
+                            color: Colors.white70,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 10.0,
                       ),
                       Card(
                         margin: EdgeInsets.symmetric(horizontal: 20.0,vertical: 5.0),
@@ -82,7 +144,7 @@ class _GuideProfileState extends State<GuideProfile> {
                                       height: 5.0,
                                     ),
                                     Text(
-                                      "2 years",
+                                      experience.text,
                                       style: TextStyle(
                                         fontSize: 18.0,
                                         color: Colors.pinkAccent,
@@ -132,28 +194,73 @@ class _GuideProfileState extends State<GuideProfile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    "Highest Qualification:",
+                    "Job Role:",
                     style: TextStyle(
                         color: Colors.redAccent,
                         fontStyle: FontStyle.normal,
-                        fontSize: 22.0
+                        fontSize: 18.0
                     ),
                   ),
                   SizedBox(
                     height: 10.0,
                   ),
-                  Text('My name is Alice and I am  a freelance mobile app developper.\n'
-                      'if you need any mobile app for your company then contact me for more informations',
+                  Text(job.text,
                     style: TextStyle(
-                      fontSize: 17.0,
+                      fontSize: 18.0,
                       fontStyle: FontStyle.normal,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.black,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.black54,
                       letterSpacing: 2.0,
                     ),
                   ),
                   SizedBox(
+                    height: 12.0,
+                  ),
+                  Text(
+                    "Company:",
+                    style: TextStyle(
+                        color: Colors.redAccent,
+                        fontStyle: FontStyle.normal,
+                        fontSize: 18.0
+                    ),
+                  ),
+                  SizedBox(
                     height: 10.0,
+                  ),
+                  Text(company.text,
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.black54,
+                      letterSpacing: 2.0,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 12.0,
+                  ),
+                  Text(
+                    "Highest Qualification:",
+                    style: TextStyle(
+                        color: Colors.redAccent,
+                        fontStyle: FontStyle.normal,
+                        fontSize: 18.0
+                    ),
+                  ),
+                  SizedBox(
+                    height: 12.0,
+                  ),
+                  Text(qualification.text,
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.black54,
+                      letterSpacing: 2.0,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 12.0,
                   ),
                 ],
               ),
@@ -165,33 +272,29 @@ class _GuideProfileState extends State<GuideProfile> {
           Container(
             width: 300.00,
 
-            child: RaisedButton(
-                onPressed: (){},
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(80.0)
-                ),
-                elevation: 0.0,
-                padding: EdgeInsets.all(0.0),
-                child: Ink(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.centerRight,
-                        end: Alignment.centerLeft,
-                        colors: [Colors.redAccent,Colors.pinkAccent]
-                    ),
-                    borderRadius: BorderRadius.circular(30.0),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 35.0,top: 0.0,right: 35.0,bottom: 20.0),
+              child: RaisedButton(
+                  onPressed: (){},
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(80.0)
                   ),
-                  child: Container(
-                    constraints: BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
-                    alignment: Alignment.center,
-                    child: Text("Contact me",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22.0,
-                          fontWeight:FontWeight.w600),
+                  color: Colors.red,
+                  elevation: 0.0,
+                  padding: EdgeInsets.all(0.0),
+                  child: InkWell(
+                    child: Container(
+                      constraints: BoxConstraints(maxWidth: 100.0, minHeight: 40.0),
+                      alignment: Alignment.center,
+                      child: Text("Contact me",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.0,
+                            fontWeight:FontWeight.w600),
+                      ),
                     ),
-                  ),
-                )
+                  )
+              ),
             ),
           ),
         ],

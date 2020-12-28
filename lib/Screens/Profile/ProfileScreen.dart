@@ -1,4 +1,6 @@
 import 'package:YnotV/Screens/Chat/ChatHomepage.dart';
+import 'package:YnotV/Screens/EditProfileGuide/EditProfile.dart';
+import 'package:YnotV/Screens/EditProfileTutor/EditProfile.dart';
 import 'package:YnotV/Screens/Search/SearchList.dart';
 import 'package:YnotV/widgets/BottomNavigation.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
@@ -116,8 +118,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                         onTap: () {
-                          Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (__) => EditProfilePage()));
+                          if(_typeController.text=="Guide")
+                            {
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute(builder: (__) => EditGuidesProfilePage()));
+                            }
+                          else if (_typeController.text=="Tutor")
+                            {
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute(builder: (__) => EditTutorProfilePage()));
+                            }
+                          else {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (__) => EditProfilePage()));
+                          }
                         }
                     ),
                   ),
@@ -273,6 +287,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               .push(MaterialPageRoute(builder: (__) => SettingsPage()));
                         }
                         ),
+                      ),
+                      ProfileListItem(
+                        icon: LineAwesomeIcons.user_circle,
+                        text: 'Terms & conditions',
+                      ),
+                      ProfileListItem(
+                        icon: LineAwesomeIcons.lock,
+                        text: 'Privacy Policy',
                       ),
                       Container(
                         height: kSpacingUnit.w * 5.5,

@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'package:YnotV/Model/GuideDetails.dart';
 import 'package:YnotV/Model/Login.dart';
 import 'package:YnotV/Model/NewsFeed.dart';
 import 'package:YnotV/Model/SearchUser.dart';
 import 'package:YnotV/Model/SignUp.dart';
+import 'package:YnotV/Model/TutorDetails.dart';
 import 'package:YnotV/Model/User.dart';
 import 'package:YnotV/Route/ApiResponse.dart';
 import 'package:flutter_session/flutter_session.dart';
@@ -39,15 +41,26 @@ class UserController {
         .catchError((_) => ApiResponse<User>(error: true, errorMessage: 'No internet connection found' ));
   }
 
-  Future<ApiResponse<User>> guideData(String userId) {
-    return http.get(API + '/userData/${userId.replaceAll(new RegExp(r"\s+\b|\b\s"), "")}', headers: headers).then((data){
+  Future<ApiResponse<GuideDetails>> guideData(String userId) {
+    return http.get(API + '/guideData/${userId.replaceAll(new RegExp(r"\s+\b|\b\s"), "")}', headers: headers).then((data){
       if(data.statusCode==200) {
         final jsonData = json.decode(data.body);
-        return ApiResponse<User>( data: User.fromJson(jsonData) );
+        return ApiResponse<GuideDetails>( data: GuideDetails.fromJson(jsonData) );
       }
-      return ApiResponse<User>(error: true, errorMessage: 'An error occurred. ' );
+      return ApiResponse<GuideDetails>(error: true, errorMessage: 'An error occurred. ' );
     })
-        .catchError((_) => ApiResponse<User>(error: true, errorMessage: 'No internet connection found' ));
+        .catchError((_) => ApiResponse<GuideDetails>(error: true, errorMessage: 'No internet connection found' ));
+  }
+
+  Future<ApiResponse<TutorDetails>> tutorData(String userId) {
+    return http.get(API + '/tutorData/${userId.replaceAll(new RegExp(r"\s+\b|\b\s"), "")}', headers: headers).then((data){
+      if(data.statusCode==200) {
+        final jsonData = json.decode(data.body);
+        return ApiResponse<TutorDetails>( data: TutorDetails.fromJson(jsonData) );
+      }
+      return ApiResponse<TutorDetails>(error: true, errorMessage: 'An error occurred. ' );
+    })
+        .catchError((_) => ApiResponse<TutorDetails>(error: true, errorMessage: 'No internet connection found' ));
   }
 
   Future<ApiResponse<List<SearchUser>>> search() {
