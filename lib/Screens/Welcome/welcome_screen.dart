@@ -54,11 +54,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           child: new Center(child: new CircularProgressIndicator())),
     )
         : WillPopScope(
-            onWillPop: () {
-              print('Backbutton pressed (device or appbar button), do whatever you want.');
-            Navigator.pop(context, false);
-            return Future.value(false);
-      },
+      onWillPop: () => Future.value(false),
       child: Scaffold(
         extendBodyBehindAppBar:true,
         appBar: new AppBar(

@@ -1,8 +1,10 @@
 import 'package:YnotV/Screens/Chat/ChatHomepage.dart';
 import 'package:YnotV/Screens/Guides/GuideList.dart';
 import 'package:YnotV/Screens/PostFeed/PostNewDataFeed.dart';
+import 'package:YnotV/Screens/PostFeed/PostNewsFeed.dart';
 import 'package:YnotV/Screens/Profile/ProfileScreen.dart';
 import 'package:YnotV/Screens/Search/SearchList.dart';
+import 'package:YnotV/Screens/StudentRequest/StudentRequest.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,16 +35,17 @@ class _BottomNavigationState extends State<BottomNavigation> {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var email = localStorage.getString("email");
     var type = localStorage.getString("type");
-    _emailController.text = email;
-    _typeController.text = type;
     setState(() {
+      _emailController.text = email;
+      _typeController.text = type;
       isLoading = false;
     });
 
     }
   @override
   Widget build(BuildContext context) {
-    return isLoading ? BottomNavigationBar(      items: [
+    return isLoading ? BottomNavigationBar(
+        items: [
       BottomNavigationBarItem(
           icon: Icon(Icons.home,
             color: Colors.black,),
@@ -160,9 +163,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
             backgroundColor: Colors.black
         ),
         BottomNavigationBarItem(
-            icon: Icon(Icons.search,
+            icon: Icon(Icons.supervisor_account_sharp,
                 color: Colors.black),
-            title: Text('Search',
+            title: Text('Network',
               style: TextStyle( color: Colors.black,),),
             backgroundColor: Colors.black
         ),
@@ -197,7 +200,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
         }
         else if (index == 1) {
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (__) => SearchListPage()));
+              .push(MaterialPageRoute(builder: (__) => StudentRequest()));
         }
         else if (index == 2) {
           Navigator.of(context)

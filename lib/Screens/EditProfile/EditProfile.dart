@@ -265,7 +265,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         borderRadius: BorderRadius.circular(20)),
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) => ProfileScreen()));
+                          builder: (BuildContext context) => Profile()));
                     },
                     child: Text("CANCEL",
                         style: TextStyle(

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:YnotV/Model/Connections.dart';
 import 'package:YnotV/Model/GuideDetails.dart';
 import 'package:YnotV/Model/Login.dart';
 import 'package:YnotV/Model/NewsFeed.dart';
@@ -108,5 +109,54 @@ class UserController {
       return ApiResponse<Sign>(error: true, errorMessage: 'Something went wrong.');
     })
         .catchError((_) => ApiResponse<Sign>(error: true, errorMessage: 'No internet connection found'));
+  }
+
+  Future<ApiResponse<Connections>> setConnection(Connections item) {
+    return http.post(API + '/establish-connection' , headers: headers, body: json.encode(item.toJson())).then((data) async {
+      if(data.statusCode==200)
+      {
+        print(data.statusCode);
+        final jsonData = json.decode(data.body);
+        return ApiResponse<Connections>( data: Connections.fromJson(jsonData) );
+      }
+      return ApiResponse<Connections>(error: true, errorMessage: 'Something went wrong.');
+    })
+        .catchError((_) => ApiResponse<Connections>(error: true, errorMessage: 'No internet connection found'));
+  }
+
+  Future<ApiResponse<Connections>> checkConnectionType(Connections item) {
+    return http.post(API + '/tutorProfileConnectionRequest' , headers: headers, body: json.encode(item.toJson())).then((data) async {
+      if(data.statusCode==200)
+      {
+        final jsonData = json.decode(data.body);
+        return ApiResponse<Connections>( data: Connections.fromJson(jsonData) );
+      }
+      return ApiResponse<Connections>(error: true, errorMessage: 'Something went wrong.');
+    })
+        .catchError((_) => ApiResponse<Connections>(error: true, errorMessage: 'No internet connection found'));
+  }
+
+  Future<ApiResponse<Connections>> acceptConnectionRequest(Connections item) {
+    return http.post(API + '/acceptConnectionRequest' , headers: headers, body: json.encode(item.toJson())).then((data) async {
+      if(data.statusCode==200)
+      {
+        final jsonData = json.decode(data.body);
+        return ApiResponse<Connections>( data: Connections.fromJson(jsonData) );
+      }
+      return ApiResponse<Connections>(error: true, errorMessage: 'Something went wrong.');
+    })
+        .catchError((_) => ApiResponse<Connections>(error: true, errorMessage: 'No internet connection found'));
+  }
+
+  Future<ApiResponse<Connections>> deleteConnectionRequest(Connections item) {
+    return http.post(API + '/rejectConnectionRequest' , headers: headers, body: json.encode(item.toJson())).then((data) async {
+      if(data.statusCode==200)
+      {
+        final jsonData = json.decode(data.body);
+        return ApiResponse<Connections>( data: Connections.fromJson(jsonData) );
+      }
+      return ApiResponse<Connections>(error: true, errorMessage: 'Something went wrong.');
+    })
+        .catchError((_) => ApiResponse<Connections>(error: true, errorMessage: 'No internet connection found'));
   }
 }

@@ -6,6 +6,7 @@ import 'package:YnotV/widgets/BottomNavigation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:YnotV/Model/User.dart';
 import 'Route/ApiResponse.dart';
@@ -40,9 +41,6 @@ class _HomeState extends State<Home> {
     if (widget.email != null) {
       service.userData(widget.email)
           .then((response) async {
-        setState(() {
-          _isLoading = false;
-        });
         if (response.error) {
           errorMesaage = response.errorMessage ?? 'Something went wrong';
         }
@@ -60,15 +58,18 @@ class _HomeState extends State<Home> {
       _getUserInfo();
     }
     _newsFeedsDate();
-  }
-
-  void _newsFeedsDate() async {
-    // ignore: missing_return
-    _apiResponse = await service2.newsFeed();
     setState(() {
       _isLoading =false;
     });
-    loader = "done";
+  }
+  void _newsFeedsDate() async {
+    // ignore: missing_return
+    _apiResponse = await service2.newsFeed();
+    print(_apiResponse.errorMessage);
+    setState(() {
+      loader = "done";
+    });
+    print(loader);
   }
   void _getUserInfo() async {
     setState(() {
@@ -79,11 +80,6 @@ class _HomeState extends State<Home> {
     if (email == null) {
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (__) => LoginScreen()));
-    }
-    else {
-      setState(() async {
-        _isLoading = false;
-      });
     }
   }
 
@@ -130,7 +126,7 @@ class _HomeState extends State<Home> {
                         makeFeed(
                             userName: _apiResponse.data[i].name,
                             userImage: _apiResponse.data[i].image,
-                            feedTime: "5 secs",
+                            feedTime: _apiResponse.data[i].created_at,
                             feedText: _apiResponse.data[i].caption,
                             feedImage: _apiResponse.data[i].url
                         ),
@@ -216,10 +212,9 @@ class _HomeState extends State<Home> {
                   makeLike(),
                   Transform.translate(
                       offset: Offset(-5, 0),
-                      child: makeLove()
                   ),
                   SizedBox(width: 5,),
-                  Text("2.5K",
+                  Text("0",
                     style: TextStyle(fontSize: 15, color: Colors.grey[800]),)
                 ],
               ),
@@ -252,20 +247,6 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget makeLove() {
-    return Container(
-      width: 25,
-      height: 25,
-      decoration: BoxDecoration(
-          color: Colors.red,
-          shape: BoxShape.circle,
-          border: Border.all(color: Colors.white)
-      ),
-      child: Center(
-        child: Icon(Icons.favorite, size: 12, color: Colors.white),
-      ),
-    );
-  }
 
   Widget makeLikeButton({isActive}) {
     return Container(
@@ -278,11 +259,11 @@ class _HomeState extends State<Home> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Icon(Icons.thumb_up, color: isActive ? Colors.blue : Colors.grey,
+            Icon(Icons.thumb_up, color: isActive ? Colors.grey : Colors.grey,
               size: 18,),
             SizedBox(width: 5,),
             Text("Like",
-              style: TextStyle(color: isActive ? Colors.blue : Colors.grey),)
+              style: TextStyle(color: isActive ? Colors.grey : Colors.grey),)
           ],
         ),
       ),

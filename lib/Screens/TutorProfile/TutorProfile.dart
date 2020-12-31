@@ -1,12 +1,14 @@
 import 'dart:convert';
 
 import 'package:YnotV/Controller/UserController.dart';
+import 'package:YnotV/Model/Connections.dart';
 import 'package:YnotV/Model/TutorDetails.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-
+String widgetText;
 // ignore: must_be_immutable
 class ProfilePage extends StatefulWidget {
   String email;
@@ -20,13 +22,13 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   bool _isOpen = false;
   UserController get service =>  GetIt.I<UserController>();
-  TextEditingController _emailController = TextEditingController();
+  UserController get service2 =>  GetIt.I<UserController>();
+  UserController get serviceForConnection =>  GetIt.I<UserController>();
   TextEditingController _nameController = TextEditingController();
+  TextEditingController loggedInUserID = TextEditingController();
   TextEditingController _idController = TextEditingController();
   TextEditingController _urlController = TextEditingController();
-  TextEditingController _typeController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
   TextEditingController title = TextEditingController();
   TextEditingController address = TextEditingController();
   TextEditingController qualification = TextEditingController();
@@ -35,63 +37,114 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController skills = TextEditingController();
   TextEditingController fees = TextEditingController();
   TextEditingController upi = TextEditingController();
-  String errorMesaage;
+  TextEditingController request_send = TextEditingController();
+  TextEditingController request_accepted = TextEditingController();
+  TextEditingController is_subscribed = TextEditingController();
+  TextEditingController is_paid = TextEditingController();
+  TextEditingController on_trail = TextEditingController();
+  TextEditingController sliderText = TextEditingController();
+  String errorMessage;
   TutorDetails user = new TutorDetails();
-  bool _isLoading = false;
+  Connections connect = new Connections();
+  Connections afterCheckDetails = new Connections();
+  bool _isLoading = true;
   var _imageList = [];
+
+  _getLoggedInUserDetails() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    final loggedInID = localStorage.getString("id");
+    loggedInUserID.text = loggedInID;
+  }
 
   @override
   void initState() {
-    super.initState();
-    this.fetchUser();
     setState(() {
       _isLoading = true;
     });
+    super.initState();
+    _getLoggedInUserDetails();
+    fetchUser();
+    sliderText.text = "CONNECT";
     if(widget.email!=null)
     {
         service.tutorData(widget.email)
             .then((response) {
           if (response.error) {
-            errorMesaage = response.errorMessage ?? 'Something went wrong';
+            errorMessage = response.errorMessage ?? 'Something went wrong';
           }
           user = response.data;
-          _idController.text = user.ID.toString();
-          _nameController.text = user.name;
-          _phoneController.text = user.phone;
-          _urlController.text = user.url;
-          qualification.text = user.qualification;
-          title.text = user.title;
-          address.text = user.address;
-          job.text = user.job;
-          company.text = user.company;
-          skills.text = user.skills;
-          fees.text = user.fees;
-          upi.text = user.upi;
+          setState(() {
+            _idController.text = user.ID.toString();
+            _nameController.text = user.name;
+            _phoneController.text = user.phone;
+            _urlController.text = user.url;
+            qualification.text = user.qualification;
+            title.text = user.title;
+            address.text = user.address;
+            job.text = user.job;
+            company.text = user.company;
+            skills.text = user.skills;
+            fees.text = user.fees;
+            upi.text = user.upi;
+            _connectionCheck(_idController.text);
+          });
         });
     }
   }
 
-  PanelController _panelController = PanelController();
-  fetchUser() async {
+
+  _connectionCheck(String ID) async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    final loggedInID = localStorage.getString("id");
+    loggedInUserID.text = loggedInID;
     setState(() {
-      _isLoading = true;
-    });
-    var url = "http://ynotv2-env.eba-exq3jn5q.ap-south-1.elasticbeanstalk.com/api/getTutorNewsFeed/2";
-    var response = await http.get(url);
-    print(response.body);
-    if(response.statusCode == 200){
-      var items = json.decode(response.body);
-      for(int index=0;items[index].url!=null;index++)
-      {
-        _imageList.add(items[index].url);
-        print(items[index].url);
-      }
+      final check = Connections(
+        tutor_id: ID,
+        student_id: loggedInUserID.text,
+      );
+      serviceForConnection.checkConnectionType(check)
+          .then((response) {
+        afterCheckDetails = response.data;
+        setState(() {
+          request_send.text = afterCheckDetails.request_send;
+          request_accepted.text = afterCheckDetails.request_accepted;
+          is_paid.text = afterCheckDetails.is_paid;
+          on_trail.text = afterCheckDetails.on_trail;
+          is_subscribed.text = afterCheckDetails.is_subscribed;
+        });
+        if(afterCheckDetails.tutor_id!=null)
+          {
+            if(request_send.text=='1')
+              {
+                sliderText.text = "REQUESTED";
+              }
+            if(request_accepted.text=='1')
+              {
+                sliderText.text = "MESSAGE";
+              }
+              if(is_subscribed.text=='1')
+              {
+                sliderText.text = "MESSAGE";
+              }
+          }
+      });
       setState(() {
         _isLoading = false;
       });
-    }else{
-      _imageList = [];
-      _isLoading = false;
+    });
+
+  }
+
+  PanelController _panelController = PanelController();
+  fetchUser() async {
+    var url = "http://ynotv2-env.eba-exq3jn5q.ap-south-1.elasticbeanstalk.com/api/getTutorNewsFeed/2";
+    var response = await http.get(url);
+    if(response.statusCode == 200){
+      var items = json.decode(response.body);
+      for(int index=0;items[index]!=null;index++)
+      {
+        _imageList.add(items[index]['url']);
+      }
     }
   }
 
@@ -101,7 +154,16 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
+      body: _isLoading
+          ? Container(
+        color: Colors.white70.withOpacity(0.3),
+        width: MediaQuery.of(context).size.width, //70.0,
+        height: MediaQuery.of(context).size.height, //70.0,
+        child: new Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: new Center(child: new CircularProgressIndicator())),
+      )
+          : Stack(
         fit: StackFit.expand,
         children: <Widget>[
           FractionallySizedBox(
@@ -199,7 +261,7 @@ class _ProfilePageState extends State<ProfilePage> {
             itemBuilder: (BuildContext context, int index) => Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage(_imageList[index].url),
+                  image: NetworkImage(_imageList[index]),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -220,7 +282,7 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Expanded(
             child: OutlineButton(
               onPressed: () => _panelController.open(),
-              borderSide: BorderSide(color: Colors.blue),
+              borderSide: BorderSide(color: Colors.red),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30)),
               child: Text(
@@ -248,13 +310,38 @@ class _ProfilePageState extends State<ProfilePage> {
                   ? (MediaQuery.of(context).size.width - (2 * hPadding)) / 1.6
                   : double.infinity,
               child: FlatButton(
-                onPressed: () => print('Message tapped'),
-                color: Colors.blue,
+                onPressed: () async {
+                  if(sliderText.text=='CONNECT')
+                    {
+                    setState(() {
+                        _isLoading = true;
+                    });
+                    final connect = Connections(
+                      tutor_id: _idController.text,
+                      student_id: loggedInUserID.text,
+                    );
+                    final result = await service2.setConnection(connect);
+                    setState(() {
+                      // ignore: unnecessary_statements
+                      sliderText.text="REQUESTED";
+                      _isLoading = false;
+                    });
+                   }
+                  if(sliderText.text=='REQUESTED')
+                    {
+                      print("wait");
+                    }
+                  if(sliderText.text=='MESSAGE')
+                  {
+                    print("CHAT BOX");
+                  }
+                },
+                color: Colors.red,
                 textColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30)),
                 child: Text(
-                  'MESSAGE',
+                  sliderText.text,
                   style: TextStyle(
                     fontFamily: 'NimbusSanL',
                     fontSize: 12,
@@ -274,7 +361,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        _infoCell(title: 'Courses', value: '5'),
+        _infoCell(title: 'Courses', value: '1'),
         Container(
           width: 1,
           height: 40,
@@ -343,5 +430,10 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose(); // always call super for dispose/initState
   }
 }

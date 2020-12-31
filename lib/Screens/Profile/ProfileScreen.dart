@@ -10,7 +10,6 @@ import 'package:YnotV/Screens/Welcome/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:YnotV/constants.dart';
 import 'package:YnotV/widgets/profile_list_item.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:share/share.dart';
@@ -19,36 +18,11 @@ import 'package:YnotV/home.dart';
 class Profile extends StatefulWidget {
   // This widget is the root of your application.
 
-  @override
-  _ProfileState createState() => _ProfileState();
-}
-
-class _ProfileState extends State<Profile> {
-  @override
-  Widget build(BuildContext context) {
-    return ThemeProvider(
-      initTheme: kLightTheme,
-      child: Builder(
-        builder: (context) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: ThemeProvider.of(context),
-            home: ProfileScreen(),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class ProfileScreen extends StatefulWidget {
-  @override
 _ProfileScreenState createState() => _ProfileScreenState();
 }
-bool _isLoading = false;
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends State<Profile> {
 
-
+  bool _isLoading = false;
   TextEditingController _emailController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
   TextEditingController _idController = TextEditingController();
@@ -79,21 +53,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _isLoading = false;
     });
   }
+
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context, height: 896, width: 414, allowFontScaling: true);
-
     var profileInfo = Expanded(
       child: Column(
         children: <Widget>[
           Container(
-            height: kSpacingUnit.w * 10,
-            width: kSpacingUnit.w * 10,
-            margin: EdgeInsets.only(top: kSpacingUnit.w * 3),
+            height: 100,
+            width: 100,
+            margin: EdgeInsets.only(top: 40),
             child: Stack(
               children: <Widget>[
                 CircleAvatar(
-                  radius: kSpacingUnit.w * 5,
+                  radius: 50,
                   backgroundImage: NetworkImage(
                     _urlController.text,
                   ),
@@ -101,20 +74,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: Container(
-                    height: kSpacingUnit.w * 2.5,
-                    width: kSpacingUnit.w * 2.5,
+                    height: 25,
+                    width: 25,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).accentColor,
+                      color: Colors.red.shade900,
                       shape: BoxShape.circle,
                     ),
                     child: InkWell(
                       child: Center(
-                        heightFactor: kSpacingUnit.w * 1.5,
-                        widthFactor: kSpacingUnit.w * 1.5,
+                        heightFactor: 5.5,
+                        widthFactor: 5.5,
                         child: Icon(
                           LineAwesomeIcons.pen,
-                          color: kDarkPrimaryColor,
-                          size: ScreenUtil().setSp(kSpacingUnit.w * 1.5),
+                          color: Colors.black,
+                          size: 15,
                         ),
                       ),
                         onTap: () {
@@ -139,34 +112,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
           ),
-          SizedBox(height: kSpacingUnit.w * 2),
+          SizedBox(height: 15),
           Text(
             _nameController.text,
             style: TextStyle(
-              fontSize: ScreenUtil().setSp(kSpacingUnit.w * 1.7),
+              fontSize: 15,
               fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(height: kSpacingUnit.w * 0.5),
+          SizedBox(height: 5.5),
           Text(
             _emailController.text,
             style: TextStyle(
-              fontSize: ScreenUtil().setSp(kSpacingUnit.w * 1.5),
+              fontSize: 12,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: kSpacingUnit.w * 2),
+          SizedBox(height: 12),
           Container(
-            height: kSpacingUnit.w * 4,
-            width: kSpacingUnit.w * 20,
+            height: 30,
+            width: 150,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(kSpacingUnit.w * 3),
-              color: Theme.of(context).accentColor,
+              borderRadius: BorderRadius.circular(25),
+              color: Colors.red.shade900,
             ),
             child: Center(
               child: Text(
                 'Upgrade to PRO',
-                style: kButtonTextStyle,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -174,43 +150,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
 
-    var themeSwitcher = ThemeSwitcher(
-      builder: (context) {
-        return AnimatedCrossFade(
-          duration: Duration(milliseconds: 200),
-          crossFadeState:
-          ThemeProvider.of(context).brightness == Brightness.dark
-              ? CrossFadeState.showFirst
-              : CrossFadeState.showSecond,
-          firstChild: GestureDetector(
-            onTap: () =>
-                ThemeSwitcher.of(context).changeTheme(theme: kLightTheme),
-            child: Icon(
-              LineAwesomeIcons.sun,
-              size: ScreenUtil().setSp(kSpacingUnit.w * 3),
-            ),
-          ),
-          secondChild: GestureDetector(
-            onTap: () =>
-                ThemeSwitcher.of(context).changeTheme(theme: kDarkTheme),
-            child: Icon(
-              LineAwesomeIcons.moon,
-              size: ScreenUtil().setSp(kSpacingUnit.w * 3),
-            ),
-          ),
-        );
-      },
-    );
-
     var header = Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        SizedBox(width: kSpacingUnit.w * 3),
+        Padding(
+          padding: const EdgeInsets.only(top:18.0),
+          child: SizedBox(width: 15),
+        ),
         InkWell(
           child: Icon(
             LineAwesomeIcons.arrow_left,
-            size: ScreenUtil().setSp(kSpacingUnit.w * 3),
+            size: 25,
           ),
           onTap: () {
             Navigator.of(context)
@@ -218,188 +169,289 @@ class _ProfileScreenState extends State<ProfileScreen> {
           },
         ),
         profileInfo,
-        themeSwitcher,
-        SizedBox(width: kSpacingUnit.w * 3),
+        SizedBox(width: 15),
       ],
     );
 
-    return ThemeSwitchingArea(
-      child: Builder(
-        builder: (context) {
-          return Scaffold(
-            body:  _isLoading
-                ? Container(
-              color: Colors.white70.withOpacity(0.3),
-              width: MediaQuery.of(context).size.width, //70.0,
-              height: MediaQuery.of(context).size.height, //70.0,
-              child: new Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: new Center(child: new CircularProgressIndicator())),
-            )
-                : Column(
-              children: <Widget>[
-                SizedBox(height: kSpacingUnit.w * 5),
-                header,
-                Expanded(
-                  child: ListView(
-                    children: <Widget>[
-                      ProfileListItem(
-                        icon: LineAwesomeIcons.question_circle,
-                        text: 'Help & Support',
+    return Scaffold(
+          body:  _isLoading
+              ? Container(
+            color: Colors.white70.withOpacity(0.3),
+            width: MediaQuery.of(context).size.width, //70.0,
+            height: MediaQuery.of(context).size.height, //70.0,
+            child: new Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: new Center(child: new CircularProgressIndicator())),
+          )
+              : Column(
+            children: <Widget>[
+              SizedBox(height: 40),
+              header,
+              Expanded(
+                child: ListView(
+                  children: <Widget>[
+                    Container(
+                      height: 50,
+                      margin: EdgeInsets.symmetric(
+                        horizontal: 35,
+                      ).copyWith(
+                        bottom: 15,
                       ),
-                      Container(
-                        height: kSpacingUnit.w * 5.5,
-                        margin: EdgeInsets.symmetric(
-                          horizontal: kSpacingUnit.w * 4,
-                        ).copyWith(
-                          bottom: kSpacingUnit.w * 2,
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: kSpacingUnit.w * 2,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(kSpacingUnit.w * 3),
-                          color: Theme.of(context).backgroundColor,
-                        ),
-                        child: InkWell(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 15,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        color: Colors.grey[200],
+                      ),
+                      child: InkWell(
                           child: Row(
                             children: <Widget>[
                               Icon(
-                                LineAwesomeIcons.cog,
-                                size: kSpacingUnit.w * 2.5,
+                                LineAwesomeIcons.question_circle,
+                                size: 25,
                               ),
-                              SizedBox(width: kSpacingUnit.w * 1.5),
+                              SizedBox(width: 15),
                               Text(
-                                "Settings",
-                                style: kTitleTextStyle.copyWith(
-                                  fontWeight: FontWeight.w500,
+                                "Help & Support",
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: 'SFProText',
                                 ),
                               ),
                               Spacer(),
                               Icon(
                                 LineAwesomeIcons.angle_right,
-                                size: kSpacingUnit.w * 2.5,
+                                size: 25,
                               ),
                             ],
                           ),
-                            onTap: () {
-                          Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (__) => SettingsPage()));
-                        }
-                        ),
+                          onTap: () async {}
                       ),
-                      ProfileListItem(
-                        icon: LineAwesomeIcons.user_circle,
-                        text: 'Terms & conditions',
+                    ),
+                    Container(
+                      height: 50,
+                      margin: EdgeInsets.symmetric(
+                        horizontal: 35,
+                      ).copyWith(
+                        bottom: 15,
                       ),
-                      ProfileListItem(
-                        icon: LineAwesomeIcons.lock,
-                        text: 'Privacy Policy',
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 15,
                       ),
-                      Container(
-                        height: kSpacingUnit.w * 5.5,
-                        margin: EdgeInsets.symmetric(
-                          horizontal: kSpacingUnit.w * 4,
-                        ).copyWith(
-                          bottom: kSpacingUnit.w * 2,
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: kSpacingUnit.w * 2,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(kSpacingUnit.w * 3),
-                          color: Theme.of(context).backgroundColor,
-                        ),
-                        child: InkWell(
-                            child: Row(
-                              children: <Widget>[
-                                Icon(
-                                  LineAwesomeIcons.user_plus,
-                                  size: kSpacingUnit.w * 2.5,
-                                ),
-                                SizedBox(width: kSpacingUnit.w * 1.5),
-                                Text(
-                                  "Invite a Friend",
-                                  style: kTitleTextStyle.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                Spacer(),
-                                Icon(
-                                  LineAwesomeIcons.angle_right,
-                                  size: kSpacingUnit.w * 2.5,
-                                ),
-                              ],
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        color: Colors.grey[200],
+                      ),
+                      child: InkWell(
+                        child: Row(
+                          children: <Widget>[
+                            Icon(
+                              LineAwesomeIcons.cog,
+                              size: 25,
                             ),
-                            onTap: () {
-                              final RenderBox box = context.findRenderObject();
-                              Share.share('http://ynotv.herokuapp.com/',
-                                  subject: "A new way of learning.",
-                                  sharePositionOrigin:
-                                  box.localToGlobal(Offset.zero) &
-                                  box.size);
-                            }
+                            SizedBox(width: 15),
+                            Text(
+                              "Settings",
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'SFProText',
+                              ),
+                            ),
+                            Spacer(),
+                            Icon(
+                              LineAwesomeIcons.angle_right,
+                              size: 25,
+                            ),
+                          ],
                         ),
+                          onTap: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (__) => SettingsPage()));
+                      }
                       ),
-                      Container(
-                        height: kSpacingUnit.w * 5.5,
-                        margin: EdgeInsets.symmetric(
-                          horizontal: kSpacingUnit.w * 4,
-                        ).copyWith(
-                          bottom: kSpacingUnit.w * 2,
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: kSpacingUnit.w * 2,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(kSpacingUnit.w * 3),
-                          color: Theme.of(context).backgroundColor,
-                        ),
-                        child: InkWell(
+                    ),
+                    Container(
+                      height: 50,
+                      margin: EdgeInsets.symmetric(
+                        horizontal: 35,
+                      ).copyWith(
+                        bottom: 15,
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 15,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        color: Colors.grey[200],
+                      ),
+                      child: InkWell(
+                          child: Row(
+                            children: <Widget>[
+                              Icon(
+                                LineAwesomeIcons.user_circle,
+                                size: 25,
+                              ),
+                              SizedBox(width: 15),
+                              Text(
+                                "Terms & conditions",
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: 'SFProText',
+                                ),
+                              ),
+                              Spacer(),
+                              Icon(
+                                LineAwesomeIcons.angle_right,
+                                size: 25,
+                              ),
+                            ],
+                          ),
+                          onTap: () {}
+                      ),
+                    ),
+                    Container(
+                      height: 50,
+                      margin: EdgeInsets.symmetric(
+                        horizontal: 35,
+                      ).copyWith(
+                        bottom: 15,
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 15,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        color: Colors.grey[200],
+                      ),
+                      child: InkWell(
+                          child: Row(
+                            children: <Widget>[
+                              Icon(
+                                LineAwesomeIcons.lock,
+                                size: 25,
+                              ),
+                              SizedBox(width: 15),
+                              Text(
+                                "Privacy Policy",
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: 'SFProText',
+                                ),
+                              ),
+                              Spacer(),
+                              Icon(
+                                LineAwesomeIcons.angle_right,
+                                size: 25,
+                              ),
+                            ],
+                          ),
+                          onTap: () async {}
+                      ),
+                    ),
+                    Container(
+                      height: 50,
+                      margin: EdgeInsets.symmetric(
+                        horizontal: 35,
+                      ).copyWith(
+                        bottom: 15,
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 15,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        color: Colors.grey[200],
+                      ),
+                      child: InkWell(
+                          child: Row(
+                            children: <Widget>[
+                              Icon(
+                                LineAwesomeIcons.user_plus,
+                                size: 25,
+                              ),
+                              SizedBox(width: 15),
+                              Text(
+                                "Invite a Friend",
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: 'SFProText',
+                                ),
+                              ),
+                              Spacer(),
+                              Icon(
+                                LineAwesomeIcons.angle_right,
+                                size: 25,
+                              ),
+                            ],
+                          ),
+                          onTap: () {
+                            final RenderBox box = context.findRenderObject();
+                            Share.share('http://ynotv.herokuapp.com/',
+                                subject: "A new way of learning.",
+                                sharePositionOrigin:
+                                box.localToGlobal(Offset.zero) &
+                                box.size);
+                          }
+                      ),
+                    ),
+                    Container(
+                      height: 50,
+                      margin: EdgeInsets.symmetric(
+                        horizontal: 35,
+                      ).copyWith(
+                        bottom: 15,
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 15,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        color: Colors.grey[200],
+                      ),
+                      child: InkWell(
                           child: Row(
                             children: <Widget>[
                               Icon(
                                 LineAwesomeIcons.alternate_sign_out,
-                                size: kSpacingUnit.w * 2.5,
+                                size: 25,
                               ),
-                              SizedBox(width: kSpacingUnit.w * 1.5),
+                              SizedBox(width: 15),
                               Text(
                                 "Logout",
-                                style: kTitleTextStyle.copyWith(
-                                  fontWeight: FontWeight.w500,
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: 'SFProText',
                                 ),
                               ),
                               Spacer(),
-                                Icon(
-                                  LineAwesomeIcons.angle_right,
-                                  size: kSpacingUnit.w * 2.5,
-                                ),
+                              Icon(
+                                LineAwesomeIcons.angle_right,
+                                size: 25,
+                              ),
                             ],
                           ),
-                            onTap: () async {
-                              super.dispose();
-                              SharedPreferences preferences = await SharedPreferences.getInstance();
-                              await preferences.clear();
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (__) => WelcomeScreen()));
-                            }
-                        ),
+                          onTap: () async {
+                            super.dispose();
+                            SharedPreferences preferences = await SharedPreferences.getInstance();
+                            await preferences.clear();
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (__) => WelcomeScreen()));
+                          }
                       ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-            bottomNavigationBar: BottomNavigation(email: _emailController.text,),
-          );
-        },
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    print("Disposing second route");
-    super.deactivate();
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        bottomNavigationBar: BottomNavigation(email: _emailController.text,),
+        );
   }
 }

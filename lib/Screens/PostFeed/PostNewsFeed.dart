@@ -1,38 +1,31 @@
 import 'package:YnotV/widgets/BottomNavigation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../home.dart';
 
-class UploadImage extends StatefulWidget {
+class PostNewsFeed extends StatefulWidget {
   @override
-  _UploadImageState createState() => _UploadImageState();
+  _PostNewsFeedState createState() => _PostNewsFeedState();
 }
 
-class _UploadImageState extends State<UploadImage> {
+class _PostNewsFeedState extends State<PostNewsFeed> {
 
 
+  bool _isLoading = false;
   TextEditingController _emailController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
   TextEditingController _idController = TextEditingController();
   TextEditingController _urlController = TextEditingController();
   TextEditingController _typeController = TextEditingController();
-  bool _isLoading = false;
   File _image;
   final picker = ImagePicker();
   TextEditingController nameContr = TextEditingController();
-  Future choiceImage()async{
-    final pickedImage = await ImagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _image = File(pickedImage.path);
-    });
-  }
 
-  @override
   void initState() {
     _getUserInfo();
+    // TODO: implement initState
     super.initState();
   }
   void _getUserInfo() async {
@@ -43,53 +36,31 @@ class _UploadImageState extends State<UploadImage> {
     var email = localStorage.getString("email");
     var name = localStorage.getString("name");
     var id = localStorage.getString("id");
-    var url = localStorage.getString("url") ?? "http://ynotv2-env.eba-exq3jn5q.ap-south-1.elasticbeanstalk.com/images/user.png";
+    var url = localStorage.getString("url");
     var type = localStorage.getString("type");
     _emailController.text = email;
     _nameController.text = name;
     _idController.text = id;
-    _urlController.text = url;
+    _urlController.text = url ?? 'https://www.pngitem.com/pimgs/m/150-1503945_transparent-user-png-default-user-image-png-png.png';
     _typeController.text = type;
-    if(_typeController.text=="Student")
-      {
-        Navigator.of(context)
-            .push(MaterialPageRoute(
-            builder: (__) => Home(email: _emailController.text,)));
-      }
     setState(() {
       _isLoading = false;
     });
   }
-
-  Future upload(File imageFile)async{
-    var uri = Uri.parse("http://ynotv2-env.eba-exq3jn5q.ap-south-1.elasticbeanstalk.com/api/postNewsFeed");
-    var request = http.MultipartRequest("POST",uri);
-    request.fields['id'] = _idController.text;
-    request.fields['caption'] = nameContr.text;
-    var pic = await http.MultipartFile.fromPath("image", imageFile.path);
-    request.files.add(pic);
-    var response = await request.send();
-
-    if (response.statusCode == 200) {
-      Navigator.of(context)
-          .push(MaterialPageRoute(
-          builder: (__) => Home(email: _emailController.text,)));
-    }
-    nameContr.text = "";
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Post something amazing!'),
+        title: Text('Share Post'),
       ),
-      body: Container(
+      body: Padding(
+        padding: const EdgeInsets.all(5.0),
         child: ListView(
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(top: 12, left: 12, bottom: 8),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Row(
                     children: <Widget>[
@@ -125,7 +96,7 @@ class _UploadImageState extends State<UploadImage> {
             Row(
               children: [
                 Flexible(
-                  flex: 9,
+                  flex: 8,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: TextFormField(
@@ -134,7 +105,7 @@ class _UploadImageState extends State<UploadImage> {
                       minLines: 2,//Normal textInputField will be displayed
                       maxLines: 3,// when user presses enter it
                       decoration: new InputDecoration(
-                        labelText: "Tell your students what new they can learn!\n\n",
+                        labelText: "Tell your students what new they can learn!",
                         fillColor: Colors.white,
                         border: new OutlineInputBorder(
                           borderRadius: new BorderRadius.circular(25.0),
@@ -145,44 +116,28 @@ class _UploadImageState extends State<UploadImage> {
                     ),
                   ),
                 ),
-                Flexible(
-                  flex: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.only(right:10.0,left: 10.0),
-                      child: IconButton(icon: Icon(Icons.camera),
-                        onPressed: (){
-                          choiceImage();
-                        },
-                      ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Flexible(
+                    flex: 1,
+                    child: IconButton(icon: Icon(Icons.camera),
+                      onPressed: (){
+                      },
                     ),
                   ),
+                ),
               ],
             ),
-            Container(
-              height: 250,
-              child: _image == null ? Text('') : Image.file(_image),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  // image: DecorationImage(
-                  //     image: new FileImage(_image),
-                  //     fit: BoxFit.cover
-                  // )
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 28.0,left: 28.0),
-              child: RaisedButton(
-                child: Text('Post'),
-                textColor: Colors.white,
-                onPressed: (){
-                  upload(_image);
-                },
-                color: Colors.red,
-                splashColor: Colors.grey,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(16.0))),
-                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-              ),
+            RaisedButton(
+              child: Text('Post'),
+              textColor: Colors.white,
+              onPressed: (){
+              },
+              color: Colors.red,
+              splashColor: Colors.grey,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(16.0))),
+              padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
             ),
           ],
         ),
